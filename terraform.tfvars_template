@@ -1,0 +1,7 @@
+##
+# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+#
+region           = "AWS REGION"
+application_name = "ELASTIC BEANSTALK APP NAME"
+use_sts          = true | false
+sts_assume_role  = "arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME"

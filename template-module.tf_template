@@ -1,0 +1,21 @@
+##
+# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+#
+module "MODULE_NAME" {
+  source           = "./modules/aws-elasticbeanstalk-deploy"
+  region           = var.region
+  application_name = var.application_name
+
+  release_name   = "<RELEASE-NAME>"
+  source_name    = "<CHART-NAME-ON-REPO"
+  source_version = "<VERSION>"
+
+  # Optional variable injection other than standard values/MODULE_NAME-values.yaml
+  #
+  # vars = {
+  #   "var"          = "DATA"
+  #   "varfile"      = file("textfile.txt)
+  #   "encoded file" = filebas64("binaryfile.bin")
+  # }
+}
+

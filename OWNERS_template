@@ -1,0 +1,14 @@
+##
+# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+#
+# Indicate that the environment makes automatic merges and deploys
+automatic: false
+
+# Optional only needed if not automatic 
+# requiredReviewers: 1
+
+# Optional only needed if not automatic 
+# reviewers:
+#   - berahac
+#   - elasticguru-bot
+#   - cloudopswork-dev
