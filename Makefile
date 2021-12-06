@@ -2,7 +2,6 @@
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
 OS := $(shell uname)
-NAMESPACE := "finconecta-staging"
 VERFOUND := $(shell [ -f VERSION ] && echo 1 || echo 0)
 RELEASE_VERSION :=
 TARGET :=
@@ -34,13 +33,13 @@ module.tf:
 version: VERSION module.tf
 ifeq ($(OS),Darwin)
 	sed -i "" -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.tf
-	sed -i "" -e "s/chart_name[ \t]*=.*/chart_name = \"$(CHART)\"/" $(TARGET)-module.tf
-	sed -i "" -e "s/chart_version[ \t]*=.*/chart_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
+	sed -i "" -e "s/source_name[ \t]*=.*/source_name = \"$(CHART)\"/" $(TARGET)-module.tf
+	sed -i "" -e "s/source_version[ \t]*=.*/source_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
 	sed -i "" -e "s/release_name[ \t]*=.*/release_name = \"$(TARGET)\"/" $(TARGET)-module.tf
 else ifeq ($(OS),Linux)
 	sed -i -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.tf
-	sed -i -e "s/chart_name[ \t]*=.*/chart_name = \"$(CHART)\"/" $(TARGET)-module.tf
-	sed -i -e "s/chart_version[ \t]*=.*/chart_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
+	sed -i -e "s/source_name[ \t]*=.*/source_name = \"$(CHART)\"/" $(TARGET)-module.tf
+	sed -i -e "s/source_version[ \t]*=.*/source_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
 	sed -i -e "s/release_name[ \t]*=.*/release_name = \"$(TARGET)\"/" $(TARGET)-module.tf
 else
 	echo "platfrom $(OS) not supported to release from"
