@@ -4,12 +4,49 @@
 module "MODULE_NAME" {
   source           = "./modules/aws-elasticbeanstalk-deploy"
   region           = var.region
-  application_name = var.application_name
+  sts_assume_role  = var.sts_assume_role
 
-  release_name   = "<RELEASE-NAME>"
-  source_name    = "<CHART-NAME-ON-REPO"
-  source_version = "<VERSION>"
+  release_name     = "<RELEASE-NAME>"
+  source_name      = "<CHART-NAME-ON-REPO"
+  source_version   = "<VERSION>"
+  namespace        = var.namespace
+  solution_stack   = "java"
+  repository_owner = var.repository_owner
 
+  private_subnets = [
+    "PRIVATE SUBNET LIST TO DEPLOY INSTANCE & APP",
+  ]
+
+  public_subnets = [
+    "PUBLIC SUBNET LIST TO DEPLOY INSTANCE & APP",
+  ]
+
+  vpc_id = "VPC ID WHERE TO DEPLOY"
+
+  server_types = [ 
+    "SERVER TYPES LIST THIS WILL HELP TO ALLOCATE DEPLOY",
+  ]
+
+  application_versions_bucket = local.application_versions_bucket
+
+  beanstalk_application          = "BEANSTALK APPLICATION WHERE TO BUILD"
+  beanstalk_ec2_key              = "EXISITNG EC2 KEY (SSH)"
+  beanstalk_ami_id               = "EXISITNG AMI TO BASE RUN"
+  beanstalk_instance_port        = 8081
+  beanstalk_backend_app_port     = 8080
+  beanstalk_enable_spot          = true
+  beanstalk_default_retention    = 90
+  beanstalk_instance_volume_size = 64
+  beanstalk_instance_volume_type = "gp2"
+
+  load_balancer_public             = false
+  load_balancer_log_bucket         = local.load_balancer_log_bucket
+  load_balancer_log_prefix         = "<RELEASE-NAME>"
+  load_balancer_ssl_certificate_id = "EXISTING CERTIFICATE"
+  #load_balancer_alias              = "OVERRIDE LB ALIAS"
+
+  domain_name              = "DOMAIN WHERE TO CREATE ALIAS"
+  domain_name_alias_prefix = "DOMAIN NAME ALIAS"
   # Optional variable injection other than standard values/MODULE_NAME-values.yaml
   #
   # vars = {

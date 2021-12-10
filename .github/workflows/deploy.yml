@@ -1,0 +1,100 @@
+# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+#
+name: Forward Environment Deploy
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - ".github/workflows/**"
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Get the owner repo
+      - name: Get owner
+        id: getowner
+        run: |
+          repo_owner=`echo "$GITHUB_REPOSITORY" | cut -f 1 -d "/"`
+          repo_name=`echo "$GITHUB_REPOSITORY" | cut -f 2 -d "/"`
+          echo "::set-output name=owner::$repo_owner"
+          echo "::set-output name=repo_name::$repo_name"
+
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.BOT_TOKEN }}
+
+      - uses: hashicorp/setup-terraform@v1
+      - uses: azure/setup-helm@v1
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
+          GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
+
+      - name: Create Plan Directory
+        run: mkdir -p ./.plans
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -no-color -out ./.plans/plan.out
+        continue-on-error: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
+          HELM_CREDS_USER: ${{ secrets.AZURE_SERVICE_ID }}
+          HELM_CREDS_PASSWORD: ${{ secrets.AZURE_SERVICE_SECRET }}
+          HELM_EXPERIMENTAL_OCI: "1"
+          GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
+
+      - name: Terraform Apply
+        id: apply
+        run: |
+          terraform apply -no-color ./.plans/plan.out
+        continue-on-error: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_SECRET_ACCESS_KEY }}
+          HELM_CREDS_USER: ${{ secrets.AZURE_SERVICE_ID }}
+          HELM_CREDS_PASSWORD: ${{ secrets.AZURE_SERVICE_SECRET }}
+          HELM_EXPERIMENTAL_OCI: "1"
+          GITHUB_API_TOKEN: ${{ secrets.BOT_TOKEN }}
+
+      # Get previous tags in order to proceed to generate next version
+      - name: Get Previous tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        id: previoustag
+        with:
+          fallback: 1.0.0
+        env:
+          GITHUB_TOKEN: "${{ secrets.BOT_TOKEN }}"
+      # Generate next SEMVER number
+      - name: Next Semver
+        uses: WyriHaximus/github-action-next-semvers@v1
+        id: semvers
+        with:
+          version: "${{ steps.previoustag.outputs.tag }}"
+      # Create a VERSION file to use through the build
+      - name: Set Version File
+        id: release
+        env:
+          NEXT_VERSION: "${{ steps.semvers.outputs.patch }}"
+        run: |
+          echo -n "$NEXT_VERSION" > VERSION
+          echo "::set-output name=release_version::$NEXT_VERSION"
+      # Push the changes to Git TAG before deploying anything
+      - name: Release Version
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          VERSION=$(cat VERSION)
+          git config --global user.name "finconecta-bot"
+          git config --global user.email "finconecta-bot@4wrd.online"
+          git tag -fa v$VERSION -m "Environment Release v$VERSION"
+          git push origin v$VERSION

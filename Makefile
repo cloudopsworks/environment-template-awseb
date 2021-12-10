@@ -2,6 +2,8 @@
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
 OS := $(shell uname)
+PWD := $(shell pwd)
+CURR := $(shell basename $(PWD))
 VERFOUND := $(shell [ -f VERSION ] && echo 1 || echo 0)
 RELEASE_VERSION :=
 TARGET :=
@@ -15,7 +17,8 @@ module.tf:
 	@if [ ! -f $(TARGET)-module.tf ] ; then \
 		echo "Module $(TARGET)-module.tf not found... copying from template" ; \
 		cp template-module.tf_template $(TARGET)-module.tf ; \
-		touch values/$(TARGET)-values.yaml ; \
+		mkdir -p values/${TARGET}/ ; \
+		touch values/$(TARGET)/.placeholder ; \
 	else echo "Module $(TARGET)-module.tf found... all OK" ; \
 	fi
 # ifeq "" "$(T)"
@@ -36,11 +39,15 @@ ifeq ($(OS),Darwin)
 	sed -i "" -e "s/source_name[ \t]*=.*/source_name = \"$(CHART)\"/" $(TARGET)-module.tf
 	sed -i "" -e "s/source_version[ \t]*=.*/source_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
 	sed -i "" -e "s/release_name[ \t]*=.*/release_name = \"$(TARGET)\"/" $(TARGET)-module.tf
+	sed -i "" -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.tf
+	sed -i "" -e "s/load_balancer_alias[ \t]*=.*/load_balancer_alias = \"$(TARGET)\-ingress\"/" $(TARGET)-module.tf
 else ifeq ($(OS),Linux)
 	sed -i -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.tf
 	sed -i -e "s/source_name[ \t]*=.*/source_name = \"$(CHART)\"/" $(TARGET)-module.tf
 	sed -i -e "s/source_version[ \t]*=.*/source_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
 	sed -i -e "s/release_name[ \t]*=.*/release_name = \"$(TARGET)\"/" $(TARGET)-module.tf
+	sed -i -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.tf
+	sed -i -e "s/load_balancer_alias[ \t]*=.*/load_balancer_alias = \"$(TARGET)\-ingress\"/" $(TARGET)-module.tf
 else
 	echo "platfrom $(OS) not supported to release from"
 	exit -1
@@ -58,3 +65,21 @@ endif
 
 clean:
 	rm -f VERSION
+
+
+init-template:
+	@if [ ! -f terraform.tfvars ] ; then \
+		echo "Initial Variables terraform.tfvars not found... copying from template" ; \
+		cp terraform.tfvars_template terraform.tfvars ; \
+	else echo "Initial Variables terraform.tfvars found... all OK" ; \
+	fi
+
+init: init-template
+ifeq ($(OS),Darwin)
+	sed -i "" -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
+else ifeq ($(OS),Linux)
+	sed -i -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
+else
+	echo "platfrom $(OS) not supported to release from"
+	exit -1
+endif

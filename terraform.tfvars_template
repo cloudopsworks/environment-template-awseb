@@ -2,6 +2,8 @@
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
 region           = "AWS REGION"
-application_name = "ELASTIC BEANSTALK APP NAME"
-use_sts          = true | false
-sts_assume_role  = "arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME"
+#use_sts          = true | false
+sts_assume_role       = "arn:aws:iam::ACCOUNT_ID:role/GITHubActionsRunRole"
+default_bucket_prefix = "AWS S3 BUCKET PREFIX NAME THAT WILL BE USED FOR BUCKETS IN THIS ENV (LOGS+VERSION)"
+namespace             = "IDENTIFIES THE NAMESPACE FOR THE ENVIRONMENT TEAM" 
+repository_owner      = "GITHUB TEAM OWNER"

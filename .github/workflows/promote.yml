@@ -1,0 +1,67 @@
+##
+# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+#
+name: Environment Promotion
+on:
+  repository_dispatch:
+    types:
+      - promote-environment
+      - promote-env
+
+permissions:
+  issues: write
+  checks: read
+  deployments: write
+  contents: write
+  packages: read
+  statuses: write
+
+jobs:
+  env-promotion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output payload
+        run: |
+          echo "This is the payload received"
+          echo "${{ github.event.client_payload }}"
+
+      # Checkout this repository
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.BOT_TOKEN }}
+
+      # Installs Terraform
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Push change for release
+        run: |
+          echo "VERSION=${{ github.event.client_payload.promote.version }}" > VERSION
+          echo "CHART=${{ github.event.client_payload.promote.repository }}" >> VERSION
+          echo "TARGET=${{ github.event.client_payload.promote.releasename }}" >> VERSION
+          make version
+
+      # Do Tidy on terraform Files
+      - name: Terraform tidy up
+        run: terraform fmt
+
+      - name: Push change to Branch
+        run: |
+          git add .
+          git config --global user.name "finconecta-bot"
+          git config --global user.email "finconecta-bot@4wrd.online"
+          git commit -a -m "chore: promote from ${{ github.event.client_payload.promote.repository }} to ${{ github.event.client_payload.promote.releasename }} - v${{ github.event.client_payload.promote.version }}"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          committer: finconecta-bot <finconecta-bot@4wrd.online>
+          branch: promote-${{ github.event.client_payload.promote.releasename }}-v${{ github.event.client_payload.promote.version }}
+          #base: "master"
+          title: "Promote ${{ github.event.client_payload.promote.releasename }} v${{ github.event.client_payload.promote.version }}"
+          token: ${{ secrets.BOT_TOKEN }}
+          body: |
+            Promotion of ${{ github.event.client_payload.promote.releasename }} v${{ github.event.client_payload.promote.version }}
+            Automatic Merge will be performed upon approval
+
+            Closes ${{ github.event.client_payload.promote.fromissue }} by ${{ github.event.client_payload.promote.fromauthor }}
