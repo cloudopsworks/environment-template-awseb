@@ -24,6 +24,21 @@ module "versions_bucket" {
       }
     }
   }
+
+  lifecycle_rule = [
+    {
+      id      = "versions-clean"
+      enabled = true
+
+      noncurrent_version_expiration = {
+        days = var.versions_expiration_days
+      }
+
+      expiration = {
+        days = var.artifact_expiration_days
+      }
+    }
+  ]
 }
 
 module "logs_bucket" {
@@ -47,4 +62,21 @@ module "logs_bucket" {
       }
     }
   }
+
+  lifecycle_rule = [
+    {
+      id      = "logs-policy"
+      enabled = true
+
+      transition = [
+        {
+          days          = var.logs_archive_days
+          storage_class = "GLACIER"
+        }
+      ]
+      expiration = {
+        days = var.logs_expiration_days
+      }
+    }
+  ]
 }

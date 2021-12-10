@@ -8,7 +8,7 @@ locals {
 
 resource "aws_elastic_beanstalk_application_version" "app_version" {
   depends_on = [
-    module.file_s3_upload
+    data.external.awscli_program
   ]
   name         = "${var.source_name}-${var.source_version}-${var.namespace}"
   application  = data.aws_elastic_beanstalk_application.application.name
@@ -20,27 +20,6 @@ resource "aws_elastic_beanstalk_application_version" "app_version" {
 
 data "aws_s3_bucket" "version_bucket" {
   bucket = var.application_versions_bucket
-}
-
-module "file_s3_upload" {
-  depends_on = [
-    data.archive_file.build_package,
-    null_resource.release_download_zip,
-    null_resource.release_download_java
-  ]
-
-  source            = "./modules/aws-cli"
-  assume_role_arn   = var.sts_assume_role
-  role_session_name = "Terraform-ENV-fileupload"
-  aws_cli_commands = [
-    "s3",
-    "cp",
-    ".work/${var.release_name}/target/package.zip",
-    "s3://${data.aws_s3_bucket.version_bucket.id}/${local.bucket_path}",
-    "--quiet",
-    "--region",
-    "${var.region}"
-  ]
 }
 
 data "archive_file" "build_package" {

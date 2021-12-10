@@ -20,6 +20,9 @@ OUTPUT_FILE=$(echo "${TERRAFORM_QUERY}" | jq -r '.output_file')
 ASSUME_ROLE_ARN=$(echo "${TERRAFORM_QUERY}" | jq -r '.assume_role_arn')
 ROLE_SESSION_NAME=$(echo "${TERRAFORM_QUERY}" | jq -r '.role_session_name')
 DEBUG_LOG_FILENAME=$(echo "${TERRAFORM_QUERY}" | jq -r '.debug_log_filename')
+REGION=$(echo "${TERRAFORM_QUERY}" | jq -r '.aws_region')
+
+export AWS_REGION=${REGION}
 
 # Do we need to assume a role?
 if [ -n "${ASSUME_ROLE_ARN}" ]; then

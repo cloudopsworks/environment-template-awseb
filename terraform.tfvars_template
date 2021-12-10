@@ -3,7 +3,11 @@
 #
 region           = "AWS REGION"
 #use_sts          = true | false
-sts_assume_role       = "arn:aws:iam::ACCOUNT_ID:role/GITHubActionsRunRole"
-default_bucket_prefix = "AWS S3 BUCKET PREFIX NAME THAT WILL BE USED FOR BUCKETS IN THIS ENV (LOGS+VERSION)"
-namespace             = "IDENTIFIES THE NAMESPACE FOR THE ENVIRONMENT TEAM" 
-repository_owner      = "GITHUB TEAM OWNER"
+sts_assume_role          = "arn:aws:iam::ACCOUNT_ID:role/GITHubActionsRunRole"
+default_bucket_prefix    = "AWS S3 BUCKET PREFIX NAME THAT WILL BE USED FOR BUCKETS IN THIS ENV (LOGS+VERSION)"
+namespace                = "IDENTIFIES THE NAMESPACE FOR THE ENVIRONMENT TEAM" 
+repository_owner         = "GITHUB TEAM OWNER"
+logs_expiration_days     = 365
+logs_archive_days        = 90
+artifact_expiration_days = 30
+versions_expiration_days = 90
