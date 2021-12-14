@@ -55,12 +55,21 @@ variable "load_balancer_ssl_policy" {
 }
 
 variable "domain_name" {
-  type    = string
-  default = "4wrd.tech"
+  type        = string
+  default     = "example.com"
+  description = "(optional) Application environment Route53 managed DNS records. if `domain_name_alias_prefix` is not specified then is not queried."
 }
 
 variable "domain_name_alias_prefix" {
-  type = string
+  type        = string
+  default     = ""
+  description = "(optional) Application name prefix for domain in order to form FQDN. If not specified no DNS record will be created"
+}
+
+variable "default_domain_ttl" {
+  type        = number
+  default     = 300
+  description = "(optional) Default DNS record TTL setting. 300s"
 }
 
 variable "beanstalk_application" {

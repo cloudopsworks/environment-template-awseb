@@ -10,7 +10,18 @@ module "MODULE_NAME" {
   source_name      = "<CHART-NAME-ON-REPO"
   source_version   = "<VERSION>"
   namespace        = var.namespace
-  solution_stack   = "java"
+  solution_stack   = "SOLUTION_STACK"
+  # Solution stack is one of:
+  #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
+  #   java11    = "^64bit Amazon Linux 2 (.*) Corretto 11(.*)$"
+  #   node      = "^64bit Amazon Linux 2 (.*) Node.js 12(.*)$"
+  #   node14    = "^64bit Amazon Linux 2 (.*) Node.js 14(.*)$"
+  #   go        = "^64bit Amazon Linux 2 (.*) Go (.*)$"
+  #   docker    = "^64bit Amazon Linux 2 (.*) Docker (.*)$"
+  #   docker-m  = "^64bit Amazon Linux 2 (.*) Multi-container Docker (.*)$"
+  #   java-amz1 = "^64bit Amazon Linux (.*)$ running Java 8(.*)$"
+  #   node-amz1 = "^64bit Amazon Linux (.*)$ running Node.js(.*)$"
+
   repository_owner = var.repository_owner
 
   private_subnets = [
@@ -45,8 +56,11 @@ module "MODULE_NAME" {
   load_balancer_ssl_certificate_id = "EXISTING CERTIFICATE"
   #load_balancer_alias              = "OVERRIDE LB ALIAS"
 
-  domain_name              = "DOMAIN WHERE TO CREATE ALIAS"
-  domain_name_alias_prefix = "DOMAIN NAME ALIAS"
+  ##
+  # Optionals: uncomment to leave this module to manage DNS association.
+  # domain_name              = "DOMAIN WHERE TO CREATE ALIAS"
+  # domain_name_alias_prefix = "DOMAIN NAME ALIAS"
+  ##
   # Optional variable for mapping ports to backend ports:
   # port_mappings = [
   #   {

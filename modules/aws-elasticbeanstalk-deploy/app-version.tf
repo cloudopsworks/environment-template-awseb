@@ -112,7 +112,7 @@ resource "null_resource" "release_conf_copy_node" {
   }
 }
 resource "null_resource" "release_download_java" {
-  count = var.solution_stack == "java" ? 1 : 0
+  count = substr(var.solution_stack, 0, 4) == "java" ? 1 : 0
   depends_on = [
     null_resource.release_pre
   ]
@@ -129,7 +129,7 @@ resource "null_resource" "release_download_java" {
 }
 
 resource "null_resource" "release_download_zip" {
-  count = var.solution_stack != "java" ? 1 : 0
+  count = substr(var.solution_stack, 0, 4) != "java" ? 1 : 0
   depends_on = [
     null_resource.release_pre
   ]
