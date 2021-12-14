@@ -1,6 +1,10 @@
 ##
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
+terraform {
+  experiments = [module_variable_optional_attrs]
+}
+
 provider "aws" {
   region = var.region
 

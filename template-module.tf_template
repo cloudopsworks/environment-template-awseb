@@ -47,6 +47,23 @@ module "MODULE_NAME" {
 
   domain_name              = "DOMAIN WHERE TO CREATE ALIAS"
   domain_name_alias_prefix = "DOMAIN NAME ALIAS"
+  # Optional variable for mapping ports to backend ports:
+  # port_mappings = [
+  #   {
+  #     name      = "default"
+  #     from_port = 80
+  #     to_port   = 8080
+  #     protocol  = "HTTP"
+  #   },
+  #   {
+  #     name             = "port443"
+  #     from_port        = 443
+  #     to_port          = 8443
+  #     protocol         = "HTTPS"
+  #     backend_protocol = "HTTPS"
+  #   }
+  ]
+
   # Optional variable injection other than standard values/MODULE_NAME-values.yaml
   #
   # vars = {

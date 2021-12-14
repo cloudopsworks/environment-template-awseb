@@ -4,7 +4,7 @@
 locals {
   load_balancer_ssl_certificate_arn = "arn:aws:acm:${var.region}:${data.aws_caller_identity.current.account_id}:certificate/${var.load_balancer_ssl_certificate_id}"
 
-  eb_settings = [
+  eb_settings_initial = [
     {
       name      = "AccessLogsS3Bucket"
       namespace = "aws:elbv2:loadbalancer"
@@ -29,12 +29,13 @@ locals {
     #   resource  = ""
     #   value     = "https://elasticbeanstalk-platform-assets-us-east-1.s3.amazonaws.com/stalks/eb_corretto8_amazon_linux_2_1.0.2903.0_20211117205923/sampleapp/EBSampleApp-Corretto.zip"
     # }
-    , {
-      name      = "Application Healthcheck URL"
-      namespace = "aws:elasticbeanstalk:application"
-      resource  = ""
-      value     = "TCP:${var.beanstalk_instance_port}"
-    }
+    # TODO: check!
+    # , { 
+    #   name      = "Application Healthcheck URL"
+    #   namespace = "aws:elasticbeanstalk:application"
+    #   resource  = ""
+    #   value     = "TCP:${var.beanstalk_instance_port}"
+    # }
     , {
       name      = "AssociatePublicIpAddress"
       namespace = "aws:ec2:vpc"
@@ -165,18 +166,6 @@ locals {
     #   value     = ""
     # }
     , {
-      name      = "DefaultProcess"
-      namespace = "aws:elbv2:listener:443"
-      resource  = ""
-      value     = "default"
-    }
-    , {
-      name      = "DefaultProcess"
-      namespace = "aws:elbv2:listener:default"
-      resource  = ""
-      value     = "default"
-    }
-    , {
       name      = "DefaultSSHPort"
       namespace = "aws:elasticbeanstalk:control"
       resource  = ""
@@ -201,12 +190,6 @@ locals {
       value     = "AllAtOnce"
     }
     , {
-      name      = "DeregistrationDelay"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "20"
-    }
-    , {
       name      = "DisableIMDSv1"
       namespace = "aws:autoscaling:launchconfiguration"
       resource  = ""
@@ -222,13 +205,13 @@ locals {
       name      = "ELBScheme"
       namespace = "aws:ec2:vpc"
       resource  = ""
-      value     = "internal"
+      value     = var.load_balancer_public ? "public" : "internal"
     }
     , {
       name      = "ELBSubnets"
       namespace = "aws:ec2:vpc"
       resource  = ""
-      value     = join(",", var.private_subnets)
+      value     = var.load_balancer_public ? join(",", var.public_subnets) : join(",", var.private_subnets)
     }
     , {
       name      = "EnableCapacityRebalancing"
@@ -296,18 +279,7 @@ locals {
       resource  = ""
       value     = "false"
     }
-    , {
-      name      = "HealthCheckInterval"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "15"
-    }
-    , {
-      name      = "HealthCheckPath"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "/"
-    }
+
     , {
       name      = "HealthCheckSuccessThreshold"
       namespace = "aws:elasticbeanstalk:healthreporting:system"
@@ -315,22 +287,10 @@ locals {
       value     = "Ok"
     }
     , {
-      name      = "HealthCheckTimeout"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "5"
-    }
-    , {
       name      = "HealthStreamingEnabled"
       namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
       resource  = ""
       value     = "true"
-    }
-    , {
-      name      = "HealthyThresholdCount"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "3"
     }
     # , {
     #   name      = "HooksPkgUrl"
@@ -404,18 +364,6 @@ locals {
       resource  = ""
       value     = "Migration"
     }
-    , {
-      name      = "ListenerEnabled"
-      namespace = "aws:elbv2:listener:443"
-      resource  = ""
-      value     = "true"
-    }
-    , {
-      name      = "ListenerEnabled"
-      namespace = "aws:elbv2:listener:default"
-      resource  = ""
-      value     = "true"
-    }
     # , {
     #   name      = "LoadBalancerIsShared"
     #   namespace = "aws:elasticbeanstalk:environment"
@@ -463,12 +411,6 @@ locals {
       namespace = "aws:elasticbeanstalk:managedactions"
       resource  = ""
       value     = "false"
-    }
-    , {
-      name      = "MatcherHTTPCode"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "200-404"
     }
     , {
       name      = "MaxBatchSize"
@@ -548,36 +490,14 @@ locals {
       resource  = ""
       value     = "5"
     }
-    , {
-      name      = "Port"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = tostring(var.beanstalk_backend_app_port)
-    }
+
     # , {
     #   name      = "PreferredStartTime"
     #   namespace = "aws:elasticbeanstalk:managedactions"
     #   resource  = ""
     #   value     = ""
     # }
-    , {
-      name      = "Protocol"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "HTTP"
-    }
-    , {
-      name      = "Protocol"
-      namespace = "aws:elbv2:listener:443"
-      resource  = ""
-      value     = "HTTPS"
-    }
-    , {
-      name      = "Protocol"
-      namespace = "aws:elbv2:listener:default"
-      resource  = ""
-      value     = "HTTP"
-    }
+
     , {
       name      = "RetentionInDays"
       namespace = "aws:elasticbeanstalk:cloudwatch:logs"
@@ -633,28 +553,10 @@ locals {
       value     = var.beanstalk_instance_volume_type
     }
     , {
-      name      = "Rules"
-      namespace = "aws:elbv2:listener:443"
-      resource  = ""
-      value     = ""
-    }
-    , {
-      name      = "Rules"
-      namespace = "aws:elbv2:listener:default"
-      resource  = ""
-      value     = ""
-    }
-    , {
       name      = "SSHSourceRestriction"
       namespace = "aws:autoscaling:launchconfiguration"
       resource  = ""
       value     = "tcp,22,22,0.0.0.0/0"
-    }
-    , {
-      name      = "SSLCertificateArns"
-      namespace = "aws:elbv2:listener:443"
-      resource  = ""
-      value     = local.load_balancer_ssl_certificate_arn
     }
     # , {
     #   name      = "SSLCertificateArns"
@@ -662,12 +564,6 @@ locals {
     #   resource  = ""
     #   value     = ""
     # }
-    , {
-      name      = "SSLPolicy"
-      namespace = "aws:elbv2:listener:443"
-      resource  = ""
-      value     = var.load_balancer_ssl_policy
-    }
     # , {
     #   name      = "SSLPolicy"
     #   namespace = "aws:elbv2:listener:default"
@@ -729,24 +625,6 @@ locals {
       value     = "Average"
     }
     , {
-      name      = "StickinessEnabled"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "false"
-    }
-    , {
-      name      = "StickinessLBCookieDuration"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "86400"
-    }
-    , {
-      name      = "StickinessType"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "lb_cookie"
-    }
-    , {
       name      = "StreamLogs"
       namespace = "aws:elasticbeanstalk:cloudwatch:logs"
       resource  = ""
@@ -781,12 +659,6 @@ locals {
       namespace = "aws:elasticbeanstalk:command"
       resource  = ""
       value     = "600"
-    }
-    , {
-      name      = "UnhealthyThresholdCount"
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      resource  = ""
-      value     = "5"
     }
     , {
       name      = "Unit"
@@ -825,4 +697,6 @@ locals {
       value     = "false"
     }
   ]
+
+  eb_settings = concat(local.eb_settings_initial, local.port_mappings_local, local.ssl_mappings)
 }

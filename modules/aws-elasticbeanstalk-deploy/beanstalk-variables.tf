@@ -84,6 +84,25 @@ variable "beanstalk_instance_port" {
   default = 8081
 }
 
+variable "port_mappings" {
+  type = list(object({
+    name               = string,
+    from_port          = number,
+    to_port            = number,
+    protocol           = optional(string)
+    backend_protocol   = optional(string)
+    health_http_status = optional(string)
+    stickiness_cookie  = optional(string)
+  }))
+  default = [
+    {
+      name      = "default"
+      from_port = 80
+      to_port   = 8080
+    }
+  ]
+  description = "(optional) Mappings of Load balancer ports."
+}
 variable "beanstalk_backend_app_port" {
   type    = number
   default = 8080

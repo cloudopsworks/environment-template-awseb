@@ -2,13 +2,15 @@
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
 locals {
-  bucket_path = "${var.release_name}/${var.source_version}/${var.source_name}-${var.source_version}-${var.namespace}.zip"
+  bucket_path     = "${var.release_name}/${var.source_version}/${var.source_name}-${var.source_version}-${var.namespace}.zip"
+  config_file_sha = sha1(join("", [for f in fileset(".", "${path.root}/values/${var.release_name}/**") : filesha1(f)]))
 }
 
 
 resource "aws_elastic_beanstalk_application_version" "app_version" {
   depends_on = [
-    data.external.awscli_program
+    null_resource.awscli_program
+    #data.external.awscli_program
   ]
   name         = "${var.source_name}-${var.source_version}-${var.namespace}"
   application  = data.aws_elastic_beanstalk_application.application.name
@@ -22,14 +24,35 @@ data "aws_s3_bucket" "version_bucket" {
   bucket = var.application_versions_bucket
 }
 
-data "archive_file" "build_package" {
+# data "archive_file" "build_package" {
+#   depends_on = [
+#     null_resource.release_download_zip,
+#     null_resource.release_download_java,
+#     null_resource.release_conf_copy_node,
+#     null_resource.release_conf_copy
+#   ]
+#   source_dir  = ".work/${var.release_name}/build/"
+#   output_path = ".work/${var.release_name}/target/package.zip"
+#   type        = "zip"
+# }
+
+resource "null_resource" "build_package" {
   depends_on = [
     null_resource.release_download_zip,
-    null_resource.release_download_java
+    null_resource.release_download_java,
+    null_resource.release_conf_copy_node,
+    null_resource.release_conf_copy
   ]
-  source_dir  = ".work/${var.release_name}/build/"
-  output_path = ".work/${var.release_name}/target/package.zip"
-  type        = "zip"
+  triggers = {
+    dir_sha1 = local.config_file_sha
+    version  = var.source_version
+    #always_run = "${timestamp()}"
+  }
+
+  provisioner "local-exec" {
+    command     = "zip -rqy ../target/package.zip ."
+    working_dir = "${path.root}/.work/${var.release_name}/build"
+  }
 }
 
 resource "null_resource" "release_pre" {
@@ -38,35 +61,56 @@ resource "null_resource" "release_pre" {
   }
 
   provisioner "local-exec" {
-    command = "mkdir -p .work/${var.release_name}/build/"
+    command = "mkdir -p ${path.root}/.work/${var.release_name}/build/"
   }
 
   provisioner "local-exec" {
-    command = "mkdir -p .work/${var.release_name}/target/"
+    command = "mkdir -p ${path.root}/.work/${var.release_name}/target/"
   }
 }
 
 resource "null_resource" "release_conf_copy" {
   depends_on = [
-    null_resource.release_pre
+    null_resource.release_pre,
+    null_resource.release_download_java,
+    null_resource.release_download_zip
   ]
 
   triggers = {
-    always_run = "${timestamp()}"
+    dir_sha1 = local.config_file_sha
+    version  = var.source_version
+    #always_run = "${timestamp()}"
   }
 
   provisioner "local-exec" {
-    command = "cp -pr values/${var.release_name}/* .work/${var.release_name}/build/"
+    command = "cp -pr ${path.root}/values/${var.release_name}/* ${path.root}/.work/${var.release_name}/build/"
   }
 
   provisioner "local-exec" {
-    command = "cp -pr values/${var.release_name}/.eb* .work/${var.release_name}/build/"
+    command = "cp -pr ${path.root}/values/${var.release_name}/.eb* ${path.root}/.work/${var.release_name}/build/"
   }
+
   provisioner "local-exec" {
     command = "echo \"Release: ${var.source_name} v${var.source_version} - Environment: ${var.release_name} / ${var.namespace}\" > .work/${var.release_name}/build/VERSION"
   }
 }
 
+resource "null_resource" "release_conf_copy_node" {
+  depends_on = [
+    null_resource.release_pre,
+    null_resource.release_download_zip
+  ]
+  count = substr(var.solution_stack, 0, 4) == "node" ? 1 : 0
+
+  triggers = {
+    dir_sha1 = local.config_file_sha
+    version  = var.source_version
+  }
+
+  provisioner "local-exec" {
+    command = "cp -pr ${path.root}/values/${var.release_name}/.env ${path.root}/.work/${var.release_name}/build/"
+  }
+}
 resource "null_resource" "release_download_java" {
   count = var.solution_stack == "java" ? 1 : 0
   depends_on = [
@@ -74,7 +118,9 @@ resource "null_resource" "release_download_java" {
   ]
 
   triggers = {
-    always_run = "${timestamp()}"
+    dir_sha1 = local.config_file_sha
+    version  = var.source_version
+    #always_run = "${timestamp()}"
   }
 
   provisioner "local-exec" {
@@ -89,11 +135,22 @@ resource "null_resource" "release_download_zip" {
   ]
 
   triggers = {
-    always_run = "${timestamp()}"
+    dir_sha1 = local.config_file_sha
+    version  = var.source_version
+    #always_run = "${timestamp()}"
   }
 
   provisioner "local-exec" {
-    command     = "curl -O ${var.repository_url}/${var.repository_owner}/${var.source_name}/releases/downloads/v${var.source_version}/${var.source_name}-${var.source_version}.zip"
-    working_dir = ".work/${var.release_name}/build/"
+    command = "${path.module}/scripts/github-asset.sh ${var.repository_owner} ${var.source_name} v${var.source_version} ${var.source_name}-${var.source_version}.zip ${path.root}/.work/${var.release_name}/build/source-app.zip"
+  }
+
+  provisioner "local-exec" {
+    command     = "unzip -qoK source-app.zip"
+    working_dir = "${path.root}/.work/${var.release_name}/build/"
+  }
+
+  provisioner "local-exec" {
+    command     = "rm -f source-app.zip"
+    working_dir = "${path.root}/.work/${var.release_name}/build/"
   }
 }
