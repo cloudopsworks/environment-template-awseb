@@ -44,7 +44,6 @@ module "MODULE_NAME" {
   beanstalk_ec2_key              = "EXISITNG EC2 KEY (SSH)"
   beanstalk_ami_id               = "EXISITNG AMI TO BASE RUN"
   beanstalk_instance_port        = 8081
-  beanstalk_backend_app_port     = 8080
   beanstalk_enable_spot          = true
   beanstalk_default_retention    = 90
   beanstalk_instance_volume_size = 64

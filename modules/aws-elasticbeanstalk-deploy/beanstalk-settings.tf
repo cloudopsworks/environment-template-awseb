@@ -422,7 +422,7 @@ locals {
       name      = "MaxSize"
       namespace = "aws:autoscaling:asg"
       resource  = ""
-      value     = "1"
+      value     = tostring(var.beanstalk_max_instances)
     }
     , {
       name      = "MeasureName"
@@ -440,7 +440,7 @@ locals {
       name      = "MinSize"
       namespace = "aws:autoscaling:asg"
       resource  = ""
-      value     = "1"
+      value     = tostring(var.beanstalk_min_instances)
     }
     , {
       name      = "MonitoringInterval"
@@ -598,19 +598,19 @@ locals {
       name      = "SpotFleetOnDemandAboveBasePercentage"
       namespace = "aws:ec2:instances"
       resource  = ""
-      value     = "0"
+      value     = tostring(var.beanstalk_spot_base_ondemand_percent)
     }
     , {
       name      = "SpotFleetOnDemandBase"
       namespace = "aws:ec2:instances"
       resource  = ""
-      value     = "0"
+      value     = tostring(var.beanstalk_spot_base_ondemand)
     }
     , {
       name      = "SpotMaxPrice"
       namespace = "aws:ec2:instances"
       resource  = ""
-      value     = ""
+      value     = var.beanstalk_spot_price
     }
     # , {
     #   name      = "StaticFiles"

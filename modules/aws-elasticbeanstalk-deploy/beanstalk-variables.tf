@@ -89,8 +89,9 @@ variable "beanstalk_ami_id" {
 }
 
 variable "beanstalk_instance_port" {
-  type    = number
-  default = 8081
+  type        = number
+  default     = 80
+  description = "(optional) Elastic Beanstalk default port for NGINX instance to run"
 }
 
 variable "port_mappings" {
@@ -112,14 +113,38 @@ variable "port_mappings" {
   ]
   description = "(optional) Mappings of Load balancer ports."
 }
-variable "beanstalk_backend_app_port" {
-  type    = number
-  default = 8080
-}
 
 variable "beanstalk_enable_spot" {
   type    = bool
   default = false
+}
+variable "beanstalk_spot_price" {
+  type        = string
+  default     = ""
+  description = "(optional) Spot Max price in case of enabling Spot Instances. Default is blank."
+}
+
+variable "beanstalk_spot_base_ondemand" {
+  type        = number
+  default     = 0
+  description = "(optional) SpotFleet base on-demand instance count before provisioning Spot. Default is 0."
+}
+
+variable "beanstalk_spot_base_ondemand_percent" {
+  type        = number
+  default     = 0
+  description = "(optional) SpotFleet base on-demand instance percent. Default is 0."
+}
+
+variable "beanstalk_min_instances" {
+  type        = number
+  default     = 1
+  description = "(optional) Minimum number of instances on the scaling group to be allowed. Default = 1."
+}
+variable "beanstalk_max_instances" {
+  type        = number
+  default     = 1
+  description = "(optional) Maximum number of instances on the scaling group to be allowed. Default = 1."
 }
 
 variable "beanstalk_default_retention" {
