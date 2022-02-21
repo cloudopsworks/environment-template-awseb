@@ -11,3 +11,7 @@ logs_expiration_days     = 365
 logs_archive_days        = 90
 artifact_expiration_days = 30
 versions_expiration_days = 90
+# Version Rollover Highly recommended for PROD/Staging
+#versions_rollover_number = 10
+# Version Rollover Default for DEV
+#versions_rollover_number = 1

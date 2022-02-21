@@ -29,7 +29,7 @@ resource "aws_elastic_beanstalk_environment" "beanstalk_environment" {
   cname_prefix        = var.load_balancer_alias != "" ? var.load_balancer_alias : "${var.release_name}-${var.namespace}-ingress"
   solution_stack_name = data.aws_elastic_beanstalk_solution_stack.solution_stack.name
   tier                = "WebServer"
-  version_label       = aws_elastic_beanstalk_application_version.app_version.name
+  version_label       = var.application_version_label
 
   dynamic "setting" {
     for_each = local.eb_settings

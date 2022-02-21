@@ -6,7 +6,6 @@ locals {
   config_file_sha = sha1(join("", [for f in fileset(".", "${path.root}/values/${var.release_name}/**") : filesha1(f)]))
 }
 
-
 resource "aws_elastic_beanstalk_application_version" "app_version" {
   depends_on = [
     null_resource.awscli_program
@@ -23,18 +22,6 @@ resource "aws_elastic_beanstalk_application_version" "app_version" {
 data "aws_s3_bucket" "version_bucket" {
   bucket = var.application_versions_bucket
 }
-
-# data "archive_file" "build_package" {
-#   depends_on = [
-#     null_resource.release_download_zip,
-#     null_resource.release_download_java,
-#     null_resource.release_conf_copy_node,
-#     null_resource.release_conf_copy
-#   ]
-#   source_dir  = ".work/${var.release_name}/build/"
-#   output_path = ".work/${var.release_name}/target/package.zip"
-#   type        = "zip"
-# }
 
 resource "null_resource" "build_package" {
   depends_on = [
