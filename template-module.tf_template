@@ -93,7 +93,7 @@ module "MODULE_NAME_app" {
   #     protocol         = "HTTPS"
   #     backend_protocol = "HTTPS"
   #   }
-  ]
+  # ]
 
   # Optional variable injection other than standard values/MODULE_NAME-values.yaml
   #
