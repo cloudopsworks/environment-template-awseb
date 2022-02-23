@@ -14,6 +14,8 @@ module "MODULE_NAME_version" {
   repository_owner = var.repository_owner
 
   application_versions_bucket = local.application_versions_bucket
+
+  beanstalk_application          = "BEANSTALK APPLICATION WHERE TO BUILD"
 }
 
 module "MODULE_NAME_app" {
@@ -38,7 +40,7 @@ module "MODULE_NAME_app" {
   #   node-amz1 = "^64bit Amazon Linux (.*)$ running Node.js(.*)$"
 
   # repository_owner = var.repository_owner
-  application_version_label = MODULE_NAME_version.outputs.application_version_label
+  application_version_label = module.MODULE_NAME_version.application_version_label
 
   private_subnets = [
     "PRIVATE SUBNET LIST TO DEPLOY INSTANCE & APP",

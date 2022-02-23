@@ -11,7 +11,7 @@ resource "aws_elastic_beanstalk_application_version" "app_version" {
     null_resource.awscli_program
     #data.external.awscli_program
   ]
-  name         = "${var.source_name}-${var.source_version}-${var.namespace}"
+  name         = "${var.source_name}-${var.source_version}-${var.namespace}-${formatdate("YYYYMMDDHHmmss", timestamp())}"
   application  = data.aws_elastic_beanstalk_application.application.name
   description  = "Application ${var.source_name} v${var.source_version} for ${var.namespace} Environment"
   force_delete = false
@@ -73,9 +73,16 @@ resource "null_resource" "release_conf_copy" {
     command = "cp -pr ${path.root}/values/${var.release_name}/* ${path.root}/.work/${var.release_name}/build/"
   }
 
+  # EB extensions
   provisioner "local-exec" {
-    command = "cp -pr ${path.root}/values/${var.release_name}/.eb* ${path.root}/.work/${var.release_name}/build/"
+    command = "cp -pr ${path.root}/values/${var.release_name}/.ebextensions ${path.root}/.work/${var.release_name}/build/"
   }
+
+  # EB platform
+  provisioner "local-exec" {
+    command = "cp -pr ${path.root}/values/${var.release_name}/.platform ${path.root}/.work/${var.release_name}/build/"
+  }
+
 
   provisioner "local-exec" {
     command = "echo \"Release: ${var.source_name} v${var.source_version} - Environment: ${var.release_name} / ${var.namespace}\" > .work/${var.release_name}/build/VERSION"
