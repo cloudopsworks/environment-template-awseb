@@ -2,7 +2,7 @@
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
 module "MODULE_NAME_version" {
-  source           = "./modules/aws-elasticbeanstalk-version"
+  source           = "./modules/aws-elasticbeanstalk-versions"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
 
