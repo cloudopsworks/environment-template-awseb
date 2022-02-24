@@ -48,14 +48,14 @@ jobs:
       - name: Push change to Branch
         run: |
           git add .
-          git config --global user.name "finconecta-bot"
-          git config --global user.email "finconecta-bot@4wrd.online"
+          git config --global user.name "${{ secrets.BOT_USER }}"
+          git config --global user.email "${{ secrets.BOT_MAIL }}"
           git commit -a -m "chore: promote from ${{ github.event.client_payload.promote.repository }} to ${{ github.event.client_payload.promote.releasename }} - v${{ github.event.client_payload.promote.version }}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          committer: finconecta-bot <finconecta-bot@4wrd.online>
+          committer: ${{ secrets.BOT_USER }} <${{ secrets.BOT_MAIL }}>
           branch: promote-${{ github.event.client_payload.promote.releasename }}-v${{ github.event.client_payload.promote.version }}
           #base: "master"
           title: "Promote ${{ github.event.client_payload.promote.releasename }} v${{ github.event.client_payload.promote.version }}"
