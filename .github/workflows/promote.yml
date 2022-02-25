@@ -39,6 +39,7 @@ jobs:
           echo "VERSION=${{ github.event.client_payload.promote.version }}" > VERSION
           echo "CHART=${{ github.event.client_payload.promote.repository }}" >> VERSION
           echo "TARGET=${{ github.event.client_payload.promote.releasename }}" >> VERSION
+          echo "DEPLOY_KIND=${{ github.event.client_payload.promote.deploykind }}" >> VERSION
           make version
 
       # Do Tidy on terraform Files
