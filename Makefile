@@ -8,6 +8,7 @@ VERFOUND := $(shell [ -f VERSION ] && echo 1 || echo 0)
 RELEASE_VERSION :=
 TARGET :=
 CHART :=
+PLATFORM :=
 
 .PHONY: VERSION
 .PHONY: version
@@ -65,6 +66,7 @@ ifeq ($(VERFOUND),1)
 override RELEASE_VERSION := $(shell cat VERSION | grep VERSION | cut -f 2 -d "=")
 override TARGET := $(shell cat VERSION | grep TARGET | cut -f 2 -d "=")
 override CHART := $(shell cat VERSION | grep CHART | cut -f 2 -d "=")
+override PLATFORM := $(shell cat VERSION | grep PLATFORM | cut -f 2 -d "=")
 else
 	$(error Hey $@ File not found)
 endif
