@@ -11,7 +11,7 @@ resource "aws_elastic_beanstalk_application_version" "app_version" {
     null_resource.awscli_program
     #data.external.awscli_program
   ]
-  name         = "${var.source_name}-${var.source_version}-${var.namespace}-${upper(substr(config_file_sha, 0, 10))}"
+  name         = "${var.source_name}-${var.source_version}-${var.namespace}-${upper(substr(local.config_file_sha, 0, 10))}"
   application  = data.aws_elastic_beanstalk_application.application.name
   description  = "Application ${var.source_name} v${var.source_version} for ${var.namespace} Environment"
   force_delete = false
