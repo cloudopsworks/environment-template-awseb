@@ -5,6 +5,7 @@ locals {
   load_balancer_log_bucket    = "${var.default_bucket_prefix}-lb-logs"
   application_versions_bucket = "${var.default_bucket_prefix}-app-versions"
 }
+
 module "versions_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
