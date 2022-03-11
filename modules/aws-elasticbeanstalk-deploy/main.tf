@@ -17,12 +17,14 @@ locals {
     node-amz1 = "^64bit Amazon Linux (.*)$ running Node.js(.*)$"
   }
 
+  lookup_solution   = lookup(local.solutions, var.solution_stack, "")
+  selected_solution = local.lookup_solution == "" ? (var.solution_stack == "" ? local.default_solution : var.solution_stack) : local.lookup_solution
 }
 
 data "aws_elastic_beanstalk_solution_stack" "solution_stack" {
   most_recent = true
 
-  name_regex = lookup(local.solutions, var.solution_stack, local.default_solution)
+  name_regex = local.selected_solution
 }
 
 resource "aws_elastic_beanstalk_environment" "beanstalk_environment" {

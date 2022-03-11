@@ -2,16 +2,16 @@
 # (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
 #
 locals {
-  bucket_path     = "${var.release_name}/${var.source_version}/${var.source_name}-${var.source_version}-${var.namespace}.zip"
+  bucket_path     = "${var.release_name}/${var.source_version}/${var.source_name}-${var.source_version}-${var.namespace}-${upper(substr(local.config_file_sha, 0, 10))}.zip"
   config_file_sha = sha1(join("", [for f in fileset(".", "${path.root}/values/${var.release_name}/**") : filesha1(f)]))
+  version_label   = "${var.release_name}-${var.source_version}-${var.namespace}-${upper(substr(local.config_file_sha, 0, 10))}"
 }
 
 resource "aws_elastic_beanstalk_application_version" "app_version" {
   depends_on = [
     null_resource.awscli_program
-    #data.external.awscli_program
   ]
-  name         = "${var.source_name}-${var.source_version}-${var.namespace}-${upper(substr(local.config_file_sha, 0, 10))}"
+  name         = local.version_label
   application  = data.aws_elastic_beanstalk_application.application.name
   description  = "Application ${var.source_name} v${var.source_version} for ${var.namespace} Environment"
   force_delete = false
@@ -94,7 +94,7 @@ resource "null_resource" "release_conf_copy_node" {
     null_resource.release_pre,
     null_resource.release_download_zip
   ]
-  count = substr(var.solution_stack, 0, 4) == "node" ? 1 : 0
+  count = length(regexall(".*node.*", lower(var.solution_stack))) > 0 ? 1 : 0
 
   triggers = {
     dir_sha1 = local.config_file_sha
