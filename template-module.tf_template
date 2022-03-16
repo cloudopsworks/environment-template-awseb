@@ -6,7 +6,7 @@
 
 ##
 # This module to manage DNS association.
-#   - This can be commented out to disable DNS management
+#   - This can be commented out to disable DNS management (not recommended)
 #
 module "MODULE_NAME_dns" {
   source           = "./modules/aws-elasticbeanstalk-dns"
