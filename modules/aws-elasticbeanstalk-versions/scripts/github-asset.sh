@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 ##
-# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+# (c) 2021 - Cloud Ops Works LLC - https://cloudops.works/
+#            On GitHub: https://github.com/cloudopsworks
+#            Distributed Under Apache v2.0 License
 #
 # Script to download asset file from tag release using GitHub API v3.
 # See: http://stackoverflow.com/a/35688093/55075    

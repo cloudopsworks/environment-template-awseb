@@ -1,5 +1,7 @@
 ##
-# (c) 2021 - CloudopsWorks OÜ - https://docs.cloudops.works/
+# (c) 2021 - Cloud Ops Works LLC - https://cloudops.works/
+#            On GitHub: https://github.com/cloudopsworks
+#            Distributed Under Apache v2.0 License
 #
 locals {
   bucket_path     = "${var.release_name}/${var.source_version}/${var.source_name}-${var.source_version}-${var.namespace}-${upper(substr(local.config_file_sha, 0, 10))}.zip"
