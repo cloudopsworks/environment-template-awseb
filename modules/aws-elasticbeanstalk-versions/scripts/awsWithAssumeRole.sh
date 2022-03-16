@@ -1,4 +1,10 @@
 #!/usr/bin/env sh
+#
+# (c) 2021 - Cloud Ops Works LLC - https://cloudops.works/
+#            On GitHub: https://github.com/cloudopsworks
+#            Distributed Under Apache v2.0 License
+#
+##
 
 # Validate required commands
 if ! [ -x "$(command -v aws)" ]; then

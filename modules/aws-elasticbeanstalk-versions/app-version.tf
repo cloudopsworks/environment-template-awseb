@@ -77,12 +77,12 @@ resource "null_resource" "release_conf_copy" {
 
   # EB extensions
   provisioner "local-exec" {
-    command = "[ -d ${path.root}/values/${var.release_name}/.ebextensions ] && cp -pr ${path.root}/values/${var.release_name}/.ebextensions ${path.root}/.work/${var.release_name}/build/"
+    command = "${path.module}/scripts/check_copy.sh ${path.root}/values/${var.release_name}/.ebextensions ${path.root}/.work/${var.release_name}/build/"
   }
 
   # EB platform
   provisioner "local-exec" {
-    command = "[ -d ${path.root}/values/${var.release_name}/.platform ] && cp -pr ${path.root}/values/${var.release_name}/.platform ${path.root}/.work/${var.release_name}/build/"
+    command = "${path.module}/scripts/check_copy.sh  ${path.root}/values/${var.release_name}/.platform ${path.root}/.work/${var.release_name}/build/"
   }
 
 
