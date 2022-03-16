@@ -3,7 +3,7 @@
 #            On GitHub: https://github.com/cloudopsworks
 #            Distributed Under Apache v2.0 License
 #
-name: Forward Environment Auto Merge on Pull request
+name: Environment Auto Merge on Pull request
 on:
   pull_request_target:
     types:
@@ -12,6 +12,11 @@ on:
       - labeled
       - unlabeled
       - edited
+    paths-ignore:
+      - ".github/workflows/**"
+      - "modules/**"
+      - ".beacon"
+      - ".destroy"
 
 permissions:
   contents: write
@@ -28,6 +33,6 @@ jobs:
       - uses: pascalgn/automerge-action@v0.14.2
         env:
           GITHUB_TOKEN: "${{ secrets.BOT_TOKEN }}"
-          MERGE_LABELS: "approved,!do-note-merge"
+          MERGE_LABELS: "approved,!do-not-merge"
           UPDATE_LABELS: "approved"
           #LOG: "TRACE"

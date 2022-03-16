@@ -36,24 +36,34 @@ jobs:
       # Installs Terraform
       - uses: hashicorp/setup-terraform@v1
 
-      - name: Push change for release
+      - name: Create version File
         run: |
           echo "VERSION=${{ github.event.client_payload.promote.version }}" > VERSION
           echo "CHART=${{ github.event.client_payload.promote.repository }}" >> VERSION
           echo "TARGET=${{ github.event.client_payload.promote.releasename }}" >> VERSION
           echo "PLATFORM=${{ github.event.client_payload.promote.platform }}" >> VERSION
+      - name: Push change for release
+        run: |
           make version
 
       # Do Tidy on terraform Files
       - name: Terraform tidy up
         run: terraform fmt
 
-      - name: Push change to Branch
-        run: |
-          git add .
-          git config --global user.name "${{ secrets.BOT_USER }}"
-          git config --global user.email "${{ secrets.BOT_EMAIL }}"
-          git commit -a -m "chore: promote from ${{ github.event.client_payload.promote.repository }} to ${{ github.event.client_payload.promote.releasename }} - v${{ github.event.client_payload.promote.version }}"
+      - name: Commit change to branch
+        uses: EndBug/add-and-commit@v9
+        with:
+          push: false
+          add: "."
+          author_name: ${{ secrets.BOT_USER }}
+          author_email: ${{ secrets.BOT_EMAIL }}
+          message: "chore: promote from ${{ github.event.client_payload.promote.repository }} to ${{ github.event.client_payload.promote.releasename }} - v${{ github.event.client_payload.promote.version }}"
+      # - name: Push change to Branch
+      #   run: |
+      #     git add .
+      #     git config --global user.name "${{ secrets.BOT_USER }}"
+      #     git config --global user.email "${{ secrets.BOT_EMAIL }}"
+      #     git commit -a -m "chore: promote from ${{ github.event.client_payload.promote.repository }} to ${{ github.event.client_payload.promote.releasename }} - v${{ github.event.client_payload.promote.version }}"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

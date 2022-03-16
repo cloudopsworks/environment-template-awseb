@@ -21,7 +21,7 @@ jobs:
   # this one runs only when commenting a pull request
   gitops:
     runs-on: ubuntu-latest
-    #if: ${{ github.events.issue.pull_request }}
+    if: github.event.issue.pull_request
     steps:
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v2
@@ -32,6 +32,9 @@ jobs:
             approve
             lgtm
             cancel
+            reject
+            close
+            rollback
             retry
           static-args: |
             author=${{ github.actor }}

@@ -3,6 +3,23 @@
 #            On GitHub: https://github.com/cloudopsworks
 #            Distributed Under Apache v2.0 License
 #
+
+##
+# This module to manage DNS association.
+#   - This can be commented out to disable DNS management
+#
+module "MODULE_NAME_dns" {
+  source           = "./modules/aws-elasticbeanstalk-dns"
+  region           = var.region
+  sts_assume_role  = var.sts_assume_role
+
+  release_name                = "<RELEASE-NAME>"
+  namespace                   = var.namespace
+  domain_name                 = "DOMAIN WHERE TO CREATE ALIAS"
+  domain_name_alias_prefix    = "DOMAIN NAME ALIAS"
+  beanstalk_environment_cname = module.MODULE_NAME_app.environment_cname
+}
+
 module "MODULE_NAME_version" {
   source           = "./modules/aws-elasticbeanstalk-versions"
   region           = var.region
@@ -26,8 +43,6 @@ module "MODULE_NAME_app" {
   sts_assume_role  = var.sts_assume_role
 
   release_name     = "<RELEASE-NAME>"
-  # source_name      = "<CHART-NAME-ON-REPO"
-  # source_version   = "<VERSION>"
   namespace        = var.namespace
   solution_stack   = "SOLUTION_STACK"
   # Solution stack is one of:
@@ -73,19 +88,16 @@ module "MODULE_NAME_app" {
   load_balancer_log_bucket         = local.load_balancer_log_bucket
   load_balancer_log_prefix         = "<RELEASE-NAME>"
   load_balancer_ssl_certificate_id = "EXISTING CERTIFICATE"
+  #load_balancer_ssl_policy         = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   #load_balancer_alias              = "OVERRIDE LB ALIAS"
 
-  ##
-  # Optionals: uncomment to leave this module to manage DNS association.
-  # domain_name              = "DOMAIN WHERE TO CREATE ALIAS"
-  # domain_name_alias_prefix = "DOMAIN NAME ALIAS"
   ##
   # Optional variable for mapping ports to backend ports:
   # port_mappings = [
   #   {
   #     name      = "default"
   #     from_port = 80
-  #     to_port   = 8080
+  #     to_port   = 8081
   #     protocol  = "HTTP"
   #   },
   #   {

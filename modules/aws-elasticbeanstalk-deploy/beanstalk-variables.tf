@@ -53,25 +53,7 @@ variable "load_balancer_public" {
 
 variable "load_balancer_ssl_policy" {
   type    = string
-  default = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-}
-
-variable "domain_name" {
-  type        = string
-  default     = "example.com"
-  description = "(optional) Application environment Route53 managed DNS records. if `domain_name_alias_prefix` is not specified then is not queried."
-}
-
-variable "domain_name_alias_prefix" {
-  type        = string
-  default     = ""
-  description = "(optional) Application name prefix for domain in order to form FQDN. If not specified no DNS record will be created"
-}
-
-variable "default_domain_ttl" {
-  type        = number
-  default     = 300
-  description = "(optional) Default DNS record TTL setting. 300s"
+  default = "ELBSecurityPolicy-2016-08"
 }
 
 variable "beanstalk_application" {

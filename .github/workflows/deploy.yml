@@ -2,14 +2,16 @@
 #            On GitHub: https://github.com/cloudopsworks
 #            Distributed Under Apache v2.0 License
 #
-name: Forward Environment Deploy
+name: Environment Deploy
 on:
   push:
     branches:
       - master
     paths-ignore:
       - ".github/workflows/**"
-
+      - "modules/**"
+      - ".beacon"
+      - ".destroy"
 
 jobs:
   deploy:
@@ -93,11 +95,18 @@ jobs:
           echo "::set-output name=release_version::$NEXT_VERSION"
       # Push the changes to Git TAG before deploying anything
       - name: Release Version
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          VERSION=$(cat VERSION)
-          git config --global user.name "${{ secrets.BOT_USER }}"
-          git config --global user.email "${{ secrets.BOT_EMAIL }}"
-          git tag -fa v$VERSION -m "Environment Release v$VERSION"
-          git push origin v$VERSION
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "."
+          author_name: ${{ secrets.BOT_USER }}
+          author_email: ${{ secrets.BOT_EMAIL }}
+          tag: "v${{ steps.semvers.outputs.patch }}"
+      # - name: Release Version
+      #   env:
+      #     BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      #   run: |
+      #     VERSION=$(cat VERSION)
+      #     git config --global user.name "${{ secrets.BOT_USER }}"
+      #     git config --global user.email "${{ secrets.BOT_EMAIL }}"
+      #     git tag -fa v$VERSION -m "Environment Release v$VERSION"
+      #     git push origin v$VERSION
