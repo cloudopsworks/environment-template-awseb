@@ -304,7 +304,7 @@ locals {
       name      = "IamInstanceProfile"
       namespace = "aws:autoscaling:launchconfiguration"
       resource  = ""
-      value     = "aws-elasticbeanstalk-ec2-role"
+      value     = var.beanstalk_instance_profile
     }
     # , {
     #   name      = "IdleTimeout"
@@ -582,13 +582,13 @@ locals {
       name      = "ServiceRole"
       namespace = "aws:elasticbeanstalk:environment"
       resource  = ""
-      value     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-elasticbeanstalk-service-role"
+      value     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.beanstalk_service_role}"
     }
     , {
       name      = "ServiceRoleForManagedUpdates"
       namespace = "aws:elasticbeanstalk:managedactions"
       resource  = ""
-      value     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-elasticbeanstalk-service-role"
+      value     = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.beanstalk_service_role}"
     }
     , {
       name      = "SpotFleetOnDemandAboveBasePercentage"

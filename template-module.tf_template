@@ -81,6 +81,8 @@ module "MODULE_NAME_app" {
   beanstalk_default_retention    = 90
   beanstalk_instance_volume_size = 64
   beanstalk_instance_volume_type = "gp2"
+  #beanstalk_instance_profile     = "aws-elasticbeanstalk-ec2-role"
+  #beanstalk_service_role         = "aws-elasticbeanstalk-service-role"
 
   load_balancer_public             = false
   load_balancer_log_bucket         = local.load_balancer_log_bucket
