@@ -171,3 +171,16 @@ jobs:
               repo: context.repo.repo,
               labels: ['approval-required','review-required']
             })
+
+      - name: Hard Fail plan not success
+        run: |
+          result_fmt="${{ steps.fmt.outcome }}"
+          result_init="${{ steps.init.outcome }}"
+          result_plan="${{ steps.plan.outcome }}"
+          
+          if [[ "$result_fmt" == "success" && "$result_init" == "success" && "$result_plan" == "success" ]] ; then
+            echo "All OK... nothing todo"
+          else
+            echo "FMT=$result_fmt\nINIT=$result_init\nPLAN=$result_plan\nIt's NOT OK, will hard fail."
+            exit 1
+          fi
