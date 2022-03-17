@@ -100,9 +100,8 @@ jobs:
                 repo: context.repo.repo,
                 labels: ['approved']
               });
-              return 'approved'
+              return 'approved';
             } else {
-              return 'not-approved'
+              return 'not-approved';
             }
 
-            }
