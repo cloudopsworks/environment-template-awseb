@@ -108,7 +108,7 @@ resource "null_resource" "release_conf_copy_node" {
   }
 }
 resource "null_resource" "release_download_java" {
-  count = substr(var.solution_stack, 0, 4) == "java" ? 1 : 0
+  count = length(regexall(".*java.*", lower(var.solution_stack))) > 0 ? 1 : 0
   depends_on = [
     null_resource.release_pre
   ]
