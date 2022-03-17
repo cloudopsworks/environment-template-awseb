@@ -69,7 +69,9 @@ variable "beanstalk_ec2_key" {
 }
 
 variable "beanstalk_ami_id" {
-  type = string
+  type        = string
+  default     = ""
+  description = "(optional) Fix AMI which elasticbeanstalk is based on"
 }
 
 variable "beanstalk_instance_port" {

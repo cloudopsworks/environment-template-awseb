@@ -319,12 +319,6 @@ locals {
       value     = "false"
     }
     , {
-      name      = "ImageId"
-      namespace = "aws:autoscaling:launchconfiguration"
-      resource  = ""
-      value     = var.beanstalk_ami_id
-    }
-    , {
       name      = "InstancePort"
       namespace = "aws:cloudformation:template:parameter"
       resource  = ""
@@ -700,5 +694,15 @@ locals {
     }
   ]
 
-  eb_settings = concat(local.eb_settings_initial, local.port_mappings_local, local.ssl_mappings)
+  image_id = var.beanstalk_ami_id != "" ? [  
+    {
+      name      = "ImageId"
+      namespace = "aws:autoscaling:launchconfiguration"
+      resource  = ""
+      value     = var.beanstalk_ami_id
+    }
+  ] : []
+
+
+  eb_settings = concat(local.eb_settings_initial, local.image_id, local.port_mappings_local, local.ssl_mappings)
 }
