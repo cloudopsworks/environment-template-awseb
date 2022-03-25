@@ -12,12 +12,11 @@ on:
       - ".beacon"
       - ".destroy"
   
-  # pull_request_target:
-  #   types:
-  #     - opened
-  #     - synchronize
-  #   paths-ignore:
-  #     - ".github/workflows/**"
+  pull_request_target:
+    types:
+      - opened
+    paths-ignore:
+      - ".github/workflows/**"
 
 permissions:
   contents: read
