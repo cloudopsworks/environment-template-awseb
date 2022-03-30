@@ -96,7 +96,7 @@ resource "null_resource" "release_conf_copy_node" {
     null_resource.release_pre,
     null_resource.release_download_zip
   ]
-  count = length(regexall(".*node.*", lower(var.solution_stack))) > 0 ? 1 : 0
+  count = length(regexall("(?i:.*node.*)", lower(var.solution_stack))) > 0 ? 1 : 0
 
   triggers = {
     dir_sha1 = local.config_file_sha
@@ -108,7 +108,7 @@ resource "null_resource" "release_conf_copy_node" {
   }
 }
 resource "null_resource" "release_download_java" {
-  count = length(regexall(".*java.*", lower(var.solution_stack))) > 0 ? 1 : 0
+  count = length(regexall("(?i:.*java.*|.*corretto.*)", lower(var.solution_stack))) > 0 ? 1 : 0
   depends_on = [
     null_resource.release_pre
   ]
