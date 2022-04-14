@@ -23,7 +23,7 @@ module "MODULE_NAME_dns" {
 
 module "MODULE_NAME_version" {
   source           = "cloudopsworks/elasticbeanstalk-version/aws"
-  version          = "1.0.0"
+  version          = "1.0.1"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
 
@@ -33,6 +33,10 @@ module "MODULE_NAME_version" {
   namespace        = var.namespace
   solution_stack   = "SOLUTION_STACK"
   repository_owner = var.repository_owner
+  # Uncomment below to override the default source for the solution stack
+  #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
+  # force_source_compressed = true
+  # source_compressed_type  = "zip"
 
   application_versions_bucket = local.application_versions_bucket
 
