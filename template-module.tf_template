@@ -9,7 +9,7 @@
 #   - This can be commented out to disable DNS management (not recommended)
 #
 module "MODULE_NAME_dns" {
-  source           = "cloudopsworks/elasticbeanstalk-dns/aws"
+  source           = "cloudopsworks/beanstalk-dns/aws"
   version          = "1.0.0"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
@@ -22,7 +22,7 @@ module "MODULE_NAME_dns" {
 }
 
 module "MODULE_NAME_version" {
-  source           = "cloudopsworks/elasticbeanstalk-version/aws"
+  source           = "cloudopsworks/beanstalk-version/aws"
   version          = "1.0.1"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
@@ -44,7 +44,7 @@ module "MODULE_NAME_version" {
 }
 
 module "MODULE_NAME_app" {
-  source           = "cloudopsworks/elasticbeanstalk-deploy/aws"
+  source           = "cloudopsworks/beanstalk-deploy/aws"
   version          = "1.0.0"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
