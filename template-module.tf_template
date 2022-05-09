@@ -10,7 +10,7 @@
 #
 module "MODULE_NAME_dns" {
   source           = "cloudopsworks/beanstalk-dns/aws"
-  version          = "1.0.0"
+  version          = "1.0.1"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
 
@@ -23,7 +23,7 @@ module "MODULE_NAME_dns" {
 
 module "MODULE_NAME_version" {
   source           = "cloudopsworks/beanstalk-version/aws"
-  version          = "1.0.1"
+  version          = "1.0.2"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
 
