@@ -23,7 +23,7 @@ permissions:
   checks: write
 
 jobs:
-  plan:
+  pr-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/labeler@v3
@@ -40,7 +40,6 @@ jobs:
           echo "::set-output name=repo_name::$repo_name"
 
       - uses: actions/checkout@v2
-        if: startsWith(github.head_ref, 'promote-')
         with:
           token: ${{ secrets.BOT_TOKEN }}
 
