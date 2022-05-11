@@ -15,12 +15,14 @@ on:
       - ".beacon"
       - ".destroy"
   
-  # pull_request_target:
-  #   types:
-  #     - opened
-  #     - synchronize
-  #   paths-ignore:
-  #     - ".github/workflows/**"
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+    branches-ignore:
+      - "promote-**"
+    paths:
+      - "values/**"
 
 permissions:
   contents: read
@@ -48,8 +50,15 @@ jobs:
           echo "::set-output name=repo_name::$repo_name"
 
       - uses: actions/checkout@v2
+        if: startsWith(github.head_ref, 'promote-')
         with:
           token: ${{ secrets.BOT_TOKEN }}
+
+      - uses: actions/checkout@v2
+        if: ! startsWith(github.head_ref, 'promote-')
+        with:
+          token: ${{ secrets.BOT_TOKEN }}
+          ref: ${{ github.events.pull_request.head.ref }}
 
       - name: Install yq
         run: |
