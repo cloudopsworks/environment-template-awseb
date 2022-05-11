@@ -14,15 +14,6 @@ on:
       - "modules/**"
       - ".beacon"
       - ".destroy"
-  
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
-    branches-ignore:
-      - "promote-**"
-    paths:
-      - "values/**"
 
 permissions:
   contents: read
@@ -53,12 +44,6 @@ jobs:
         if: startsWith(github.head_ref, 'promote-')
         with:
           token: ${{ secrets.BOT_TOKEN }}
-
-      - uses: actions/checkout@v2
-        if: ! startsWith(github.head_ref, 'promote-')
-        with:
-          token: ${{ secrets.BOT_TOKEN }}
-          ref: ${{ github.events.pull_request.head.ref }}
 
       - name: Install yq
         run: |
@@ -113,7 +98,7 @@ jobs:
           #if-no-files-found: error
 
       - uses: actions/github-script@v4
-        if: github.event_name == 'pull_request'
+        #if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:

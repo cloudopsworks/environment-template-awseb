@@ -30,9 +30,39 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     steps:
-      - uses: pascalgn/automerge-action@v0.14.2
+      - uses: pascalgn/automerge-action@v0.15.2
+        if: ${{ startsWith(github.head_ref, 'promote-') }}
         env:
           GITHUB_TOKEN: "${{ secrets.BOT_TOKEN }}"
           MERGE_LABELS: "approved,!do-not-merge"
           UPDATE_LABELS: "approved"
-          #LOG: "TRACE"
+          LOG: "TRACE"
+      - uses: actions/github-script@v4
+        if: ${{ ! startsWith(github.head_ref, 'promote-') }}
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const {data: pullLabels} = await github.issues.listLabelsOnIssue({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            const labels = pullLabels.map(label => label.name);
+
+            var is_mergeable = false;
+
+            for (const aLabel of labels) {
+              if ( aLabel == 'approved' ) {
+                is_mergeable = true;
+              }
+            }
+
+            if ( is_mergeable ) {
+              github.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                merge_method: 'merge'
+              });
+            }
