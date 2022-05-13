@@ -9,10 +9,10 @@ on:
     types:
       - opened
       - synchronize
-    branches-ignore:
-      - "promote-**"
     paths:
-      - "values/**"
+      - 'values/**'
+      - '!**.tf'
+      - '!**.tfvars'
 
 permissions:
   contents: read
@@ -83,19 +83,38 @@ jobs:
         with:
           github-token: ${{secrets.BOT_TOKEN}}
           script: |
-            const reviewers_json=JSON.parse('${{ steps.reviewers.outputs.as_json }}')
-            const reviewers_count=${{ steps.reviewers.outputs.count }}
+            const reviewers_json=JSON.parse('${{ steps.reviewers.outputs.as_json }}');
+            const reviewers_count=${{ steps.reviewers.outputs.count }};
+            const actor = '${{ github.event.pull_request.user.login }}';
+            const ref = '${{ github.event.pull_request.head.ref }}'
+
+            var reviewers = [];
+            for ( const rev of reviewers_json ) {
+              if ( actor != rev ) {
+                reviewers.push(rev);
+              }
+            }
 
             github.pulls.requestReviewers({
               pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              reviewers: reviewers_json
-            })
+              reviewers: reviewers
+            });
 
             github.issues.addLabels({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               labels: ['approval-required','review-required']
-            })
+            });
+
+            if( !ref.startsWith('promote-') ) {
+              github.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: ['merge-allowed']
+              });
+            }
+            
