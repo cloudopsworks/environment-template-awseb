@@ -82,7 +82,7 @@ module "MODULE_NAME_app" {
 
   beanstalk_application          = "BEANSTALK APPLICATION WHERE TO BUILD"
   beanstalk_ec2_key              = "EXISITNG EC2 KEY (SSH)"
-  beanstalk_ami_id               = "EXISITNG AMI TO BASE RUN"
+  beanstalk_ami_id               = "EXISITNG AMI TO BASE RUN or BLANK is Default"
   beanstalk_instance_port        = 8081
   beanstalk_enable_spot          = true
   beanstalk_default_retention    = 90
