@@ -32,6 +32,10 @@ override.tf.json
 # example: *tfplan*
 .terraform.lock.hcl
 
+# Mac & Windows excludes
+.DS_Store
+
+# Module excludes
 .plans/
 .work/
 modules/**/temp/**
