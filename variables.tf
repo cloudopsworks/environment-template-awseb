@@ -37,3 +37,8 @@ variable "artifact_expiration_days" {
   type        = number
   description = "(required) Versions bucket last artifact available deletion policy"
 }
+
+variable "artifact_transition_days" {
+  type        = number
+  description = "(required) Versions bucket transition to different tiers Standard-IA -> Glacier in days."
+}

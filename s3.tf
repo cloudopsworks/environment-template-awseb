@@ -37,6 +37,24 @@ module "versions_bucket" {
       id      = "versions-clean"
       enabled = true
 
+      transition = [
+        {
+          days          = var.artifact_transition_days
+          storage_class = "STANDARD_IA"
+        },
+        {
+          days          = var.artifact_transition_days * 2
+          storage_class = "GLACIER"
+        }
+      ]
+
+      noncurrent_transition = [
+        {
+          days          = var.artifact_transition_days * 2
+          storage_class = "GLACIER"
+        }
+      ]
+
       noncurrent_version_expiration = {
         days = var.versions_expiration_days
       }
