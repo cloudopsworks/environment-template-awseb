@@ -15,6 +15,9 @@ on:
 
 jobs:
   deploy:
+    concurrency:
+      group: deploy-promotion
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       # Get the owner repo

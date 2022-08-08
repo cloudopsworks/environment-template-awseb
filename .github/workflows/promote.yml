@@ -20,6 +20,9 @@ permissions:
 
 jobs:
   env-promotion:
+    concurrency:
+      group: deploy-promotion
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Output payload
