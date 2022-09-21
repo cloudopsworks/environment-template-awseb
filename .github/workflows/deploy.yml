@@ -35,6 +35,8 @@ jobs:
           fetch-depth: 0
 
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
 
       # Get previous tags in order to proceed to generate next version
       - name: Get Previous tag
