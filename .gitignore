@@ -39,3 +39,12 @@ override.tf.json
 .plans/
 .work/
 modules/**/temp/**
+
+# Ignore IDEA IDE
+.idea
+*.iml
+
+# Ignore Eclipse IDE
+.classpath
+.settings
+
