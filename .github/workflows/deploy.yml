@@ -26,15 +26,15 @@ jobs:
         run: |
           repo_owner=`echo "$GITHUB_REPOSITORY" | cut -f 1 -d "/"`
           repo_name=`echo "$GITHUB_REPOSITORY" | cut -f 2 -d "/"`
-          echo "::set-output name=owner::$repo_owner"
-          echo "::set-output name=repo_name::$repo_name"
+          echo "owner=$repo_owner" >> $GITHUB_OUTPUT
+          echo "repo_name=$repo_name" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.BOT_TOKEN }}
           fetch-depth: 0
 
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.1.7
 
@@ -97,7 +97,7 @@ jobs:
           NEXT_VERSION: "${{ steps.semvers.outputs.patch }}"
         run: |
           echo -n "$NEXT_VERSION" > VERSION
-          echo "::set-output name=release_version::$NEXT_VERSION"
+          echo "release_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
       # Push the changes to Git TAG before deploying anything
       - name: Release Version
         env:

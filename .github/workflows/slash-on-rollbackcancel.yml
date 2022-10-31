@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Closes the Pull Request
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
@@ -33,20 +33,20 @@ jobs:
             
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            const {data: thePull} = await github.pulls.get({
+            const {data: thePull} = await github.rest.pulls.get({
               pull_number: pull_request_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
 
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: pull_request_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
             });
 
-            github.pulls.update({
+            github.rest.pulls.update({
               pull_number: pull_request_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
