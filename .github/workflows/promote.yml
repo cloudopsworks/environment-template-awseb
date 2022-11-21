@@ -31,7 +31,7 @@ jobs:
           echo "${{ github.event.client_payload }}"
 
       # Checkout this repository
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
           token: ${{ secrets.BOT_TOKEN }}
