@@ -60,8 +60,8 @@ jobs:
         id: push
         run: |
           git add .
-          git config --global user.name "${{ secrets.BOT_USER }}"
-          git config --global user.email "${{ secrets.BOT_EMAIL }}"
+          git config --global user.name "${{ vars.BOT_USER }}"
+          git config --global user.email "${{ vars.BOT_EMAIL }}"
           MSG="chore: promote from ${{ github.event.client_payload.promote.repository }} to ${{ github.event.client_payload.promote.releasename }} - v${{ github.event.client_payload.promote.version }}"
           tracking=${{ github.event.client_payload.promote.trackingid }}
           if [ "a$tracking" != "a" ] ; then
@@ -74,7 +74,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: "${{ steps.push.outputs.message }}"
-          committer: ${{ secrets.BOT_USER }} <${{ secrets.BOT_EMAIL }}>
+          committer: ${{ vars.BOT_USER }} <${{ vars.BOT_EMAIL }}>
           branch: promote-${{ github.event.client_payload.promote.releasename }}-v${{ github.event.client_payload.promote.version }}
           #base: "master"
           title: "Promote ${{ github.event.client_payload.promote.releasename }} v${{ github.event.client_payload.promote.version }}"

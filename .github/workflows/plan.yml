@@ -95,7 +95,7 @@ jobs:
           HELM_CREDS_PASSWORD: ${{ secrets.AZURE_SERVICE_SECRET }}
           HELM_EXPERIMENTAL_OCI: "1"
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: environment-release-plan
           path: ./.plans/plan.out
