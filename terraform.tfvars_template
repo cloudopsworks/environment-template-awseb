@@ -9,11 +9,13 @@ sts_assume_role          = "arn:aws:iam::ACCOUNT_ID:role/GITHubActionsRunRole"
 default_bucket_prefix    = "AWS S3 BUCKET PREFIX NAME THAT WILL BE USED FOR BUCKETS IN THIS ENV (LOGS+VERSION)"
 namespace                = "IDENTIFIES THE NAMESPACE FOR THE ENVIRONMENT TEAM" 
 repository_owner         = "GITHUB TEAM OWNER"
-logs_expiration_days     = 365
+logs_retention_years     = 3
 logs_archive_days        = 90
 artifact_transition_days = 30
-artifact_expiration_days = 365
-versions_expiration_days = 365
+artifact_archive_days    = 365
+artifact_retention_years = 3
+versions_archive_days    = 365
+versions_retention_years = 3
 # Version Rollover Highly recommended for PROD/Staging
 #versions_rollover_number = 10
 # Version Rollover Default for DEV

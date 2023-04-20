@@ -1,5 +1,5 @@
 ##
-# (c) 2021 - Cloud Ops Works LLC - https://cloudops.works/
+# (c) 2022 - Cloud Ops Works LLC - https://cloudops.works/
 #            On GitHub: https://github.com/cloudopsworks
 #            Distributed Under Apache v2.0 License
 #
@@ -10,7 +10,7 @@ locals {
 
 module "versions_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.0.0"
+  version = "3.4.0"
 
   bucket                  = local.application_versions_bucket
   acl                     = "private"
@@ -43,24 +43,24 @@ module "versions_bucket" {
           storage_class = "STANDARD_IA"
         },
         {
-          days          = var.artifact_transition_days * 2
+          days          = var.artifact_archive_days
           storage_class = "GLACIER"
         }
       ]
 
       noncurrent_transition = [
         {
-          days          = var.artifact_transition_days * 2
+          days          = var.versions_archive_days
           storage_class = "GLACIER"
         }
       ]
 
       noncurrent_version_expiration = {
-        days = var.versions_expiration_days
+        days = var.versions_retention_years * 365
       }
 
       expiration = {
-        days = var.artifact_expiration_days
+        days = var.artifact_retention_years * 365
       }
     }
   ]
@@ -68,7 +68,7 @@ module "versions_bucket" {
 
 module "logs_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.0.0"
+  version = "3.4.0"
 
   bucket                         = local.load_balancer_log_bucket
   acl                            = "log-delivery-write"
@@ -101,7 +101,7 @@ module "logs_bucket" {
         }
       ]
       expiration = {
-        days = var.logs_expiration_days
+        days = var.logs_retention_years * 365
       }
     }
   ]

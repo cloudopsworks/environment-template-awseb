@@ -18,9 +18,10 @@ variable "repository_owner" {
   description = "(required) Repository onwer/team"
 }
 
-variable "logs_expiration_days" {
+variable "logs_retention_years" {
   type        = number
-  description = "(required) Log bucket expiration time policy"
+  description = "(required) Log bucket expiration time policy in years."
+  default     = 3
 }
 
 variable "logs_archive_days" {
@@ -28,17 +29,31 @@ variable "logs_archive_days" {
   description = "(required) Log bucket file archiving to GLACIER time policy"
 }
 
-variable "versions_expiration_days" {
+variable "versions_retention_years" {
   type        = number
   description = "(required) Versions bucket artifact versions deletion policy"
+  default     = 3
 }
 
-variable "artifact_expiration_days" {
+variable "artifact_retention_years" {
   type        = number
   description = "(required) Versions bucket last artifact available deletion policy"
+  default     = 3
 }
 
 variable "artifact_transition_days" {
   type        = number
-  description = "(required) Versions bucket transition to different tiers Standard-IA -> Glacier in days."
+  description = "(required) Versions bucket transition to different tiers Day 0 -> Standard-IA -> Glacier in days."
+}
+
+variable "artifact_archive_days" {
+  type        = number
+  description = "(required) Transition to archive storage tier Standard-IA -> Glacier in days."
+  default     = 365
+}
+
+variable "versions_archive_days" {
+  type        = number
+  description = "(required) Transition to archive storage tier Standard-IA -> Glacier in days."
+  default     = 365
 }
