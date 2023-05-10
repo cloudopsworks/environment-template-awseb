@@ -35,6 +35,23 @@ This will create a new Branch with following naming:
 * Commit changes to the branch and push to repository
 * Create a new pull request in order to start the deployment, depending if automatic or not will merge the PR to Master branch.
 
+## Initial Setup
+### Configuring Backend
+First step is to configure the backend configuration for the environment
+this is done copying the following file: `backend.tf_template` as `backend.tf`
+there is a asample configuration for S3 backend where it can be done but
+you can select whatever backend suits for the case. <br/>
+Documentation about Terraform Backends can be found **[here](https://developer.hashicorp.com/terraform/language/settings/backends/configuration)**.
+
+### Environment Variables for deployment automation
+The second point is to configure the environment variables to
+setup this environment and maintain the S3 Bucket and deployment pipeline. <br/>
+
+First step is to run the following command:
+```shell
+make init
+```
+
 ### Create OWNERS file
 This file is require to configure the automation workflow
 you have to copy current `OWNERS_template` to `OWNERS
