@@ -87,7 +87,7 @@ jobs:
             const protectedSourcesTxt = ${{ steps.protected_sources.outputs.result != null }};
             const protectedSources = protectedSourcesTxt ? JSON.parse('${{ steps.protected_sources.outputs.result }}') : [];
             const reviewers_text = ${{ steps.reviewers_list.outputs.result != null }};
-            const reviewers_json = reviewer_text ? JSON.parse('${{ steps.reviewers_list.outputs.result }}') : [];
+            const reviewers_json = reviewers_text ? JSON.parse('${{ steps.reviewers_list.outputs.result }}') : [];
             const owners_text = ${{ steps.owners_list.outputs.result != null }};
             const owners_json = owners_text ? JSON.parse('${{ steps.owners_list.outputs.result }}') : [];
             const contrib_text = ${{ steps.contrib_list.outputs.result != null }};
