@@ -88,16 +88,22 @@ init-template:
 init: init-template
 ifeq ($(OS),Darwin)
 	sed -i "" -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
-	cp backend.tf_template backend.tf
-	cp OWNERS_template OWNERS
 else ifeq ($(OS),Linux)
 	sed -i -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
-	cp backend.tf_template backend.tf
-	cp OWNERS_template OWNERS
 else
 	echo "platfrom $(OS) not supported to release from"
 	exit -1
 endif
+	@if [ ! -f backend.tf ] ; then \
+		echo "Backend backend.tf not found... copying from template" ; \
+		cp backend.tf_template backend.tf ; \
+	else echo "Backend terraform.tfvars found... all OK" ; \
+	fi
+	@if [ ! -f OWNERS ] ; then \
+		echo "Owners file OWNERS not found... copying from template" ; \
+		cp OWNERS_template OWNERS ; \
+	else echo "Owners file OWNERS found... all OK" ; \
+	fi
 
 config: clean
 	@read -p "Enter Branch Name (no spaces):" the_branch ; \
