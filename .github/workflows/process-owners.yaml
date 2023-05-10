@@ -84,15 +84,15 @@ jobs:
           script: |
             const branch = context.payload.ref;
             const branchProtectionRules = ${{ steps.branch_protection_rules.outputs.result }};
-            const protectedSourcesTxt = ${{ steps.protected_sources.outputs.result != null }};
+            const protectedSourcesTxt = ${{ steps.protected_sources.outputs.result != 'null' }};
             const protectedSources = protectedSourcesTxt ? JSON.parse('${{ steps.protected_sources.outputs.result }}') : [];
-            const reviewers_text = ${{ steps.reviewers_list.outputs.result != null }};
+            const reviewers_text = ${{ steps.reviewers_list.outputs.result != 'null' }};
             const reviewers_json = reviewers_text ? JSON.parse('${{ steps.reviewers_list.outputs.result }}') : [];
-            const owners_text = ${{ steps.owners_list.outputs.result != null }};
+            const owners_text = ${{ steps.owners_list.outputs.result != 'null' }};
             const owners_json = owners_text ? JSON.parse('${{ steps.owners_list.outputs.result }}') : [];
-            const contrib_text = ${{ steps.contrib_list.outputs.result != null }};
+            const contrib_text = ${{ steps.contrib_list.outputs.result != 'null' }};
             const contrib_json = contrib_text ? JSON.parse('${{ steps.contrib_list.outputs.result }}') : {};
-            const reviewers_count = ${{ steps.reviewers_count.outputs.result != null }} ? ${{ steps.reviewers_count.outputs.result }} : 0;
+            const reviewers_count = ${{ steps.reviewers_count.outputs.result != 'null' }} ? ${{ steps.reviewers_count.outputs.result }} : 0;
             const actor = context.actor;
             
             // Get reviewers list
@@ -123,7 +123,6 @@ jobs:
               required_status_checks: {
                 strict: true,
                 checks: [
-                  { context: "bluegreen" },
                   { context: "plan" },
                   { context: "deploy" }
                 ]
