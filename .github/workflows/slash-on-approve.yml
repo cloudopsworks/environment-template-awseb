@@ -67,7 +67,7 @@ jobs:
                 break;
               }
             }
-            for (const aUser of reviewers ) {
+            for (const aUser of reviewers.users ) {
               if( aUser.login == author ) {
                 is_approved = true;
                 break;
