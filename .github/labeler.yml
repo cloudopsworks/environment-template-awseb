@@ -1,16 +1,19 @@
 ##
-# (c) 2021 - Cloud Ops Works LLC - https://cloudops.works/
+# (c) 2022 - Cloud Ops Works LLC - https://cloudops.works/
 #            On GitHub: https://github.com/cloudopsworks
 #            Distributed Under Apache v2.0 License
 #
 release:
-- ./*
+- any: [ 'terraform.tfvars' ]
+
+config:
+- any: [ 'values/**/*' ]
+
+owners:
+- any: [ 'OWNERS' ]
 
 size-XS:
-- any: [ '*-version.tfvars' ]
+- any: [ 'README.*' ]
 
-size-S:
-- any: [ '*-module.tf' ]
-
-size-XL:
-- any: [ '**/*.tf', '!*-version.tfvars', '!*-module.tf' ]
+size-L:
+- any: [ '**/*.tf', '!*.tfvars', '!*-module.tf' ]

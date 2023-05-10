@@ -53,9 +53,21 @@ jobs:
               pull_number: pull_request_number
             });
 
-            var is_approved = false;
+            const {data: reviews} = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pull_request_number
+            });
 
-            for (const aUser of reviewers.users ) {
+            var is_approved = false;
+            
+            for (const aReview of reviews ) {
+              if( aReview.user.login == author && aReview.state == 'APPROVED' ) {
+                is_approved = true;
+                break;
+              }
+            }
+            for (const aUser of reviewers ) {
               if( aUser.login == author ) {
                 is_approved = true;
                 break;
@@ -75,12 +87,12 @@ jobs:
                 reviewer_names.push(aUser.login);
               }
 
-              github.rest.pulls.removeRequestedReviewers({
-                pull_number: pull_request_number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                reviewers: reviewer_names
-              });
+              // github.rest.pulls.removeRequestedReviewers({
+              //   pull_number: pull_request_number,
+              //   owner: context.repo.owner,
+              //   repo: context.repo.repo,
+              //   reviewers: reviewer_names
+              // });
 
               github.rest.issues.removeLabel({
                 issue_number: pull_request_number,
@@ -104,4 +116,4 @@ jobs:
             } else {
               return 'not-approved';
             }
-
+            

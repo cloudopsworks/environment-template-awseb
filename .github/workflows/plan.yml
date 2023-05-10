@@ -23,6 +23,8 @@ permissions:
   issues: write
   checks: write
 
+concurrency: environment-awseb
+
 jobs:
   plan:
     concurrency:

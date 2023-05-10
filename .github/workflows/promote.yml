@@ -18,6 +18,8 @@ permissions:
   packages: read
   statuses: write
 
+concurrency: environment-awseb-promo
+
 jobs:
   env-promotion:
     concurrency:

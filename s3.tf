@@ -79,6 +79,8 @@ module "logs_bucket" {
   force_destroy                  = true
   attach_elb_log_delivery_policy = true # Required for ALB logs
   attach_lb_log_delivery_policy  = true # Required for ALB/NLB logs
+  control_object_ownership       = true
+  object_ownership               = "ObjectWriter"
 
   server_side_encryption_configuration = {
     rule = {

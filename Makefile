@@ -15,6 +15,7 @@ PLATFORM :=
 .PHONY: VERSION
 .PHONY: version
 .PHONY: module.tf
+.PHONY: config
 
 module.tf:
 	@if [ ! -f $(TARGET)-module.tf ] ; then \
@@ -93,3 +94,8 @@ else
 	echo "platfrom $(OS) not supported to release from"
 	exit -1
 endif
+
+config: clean
+	@read -p "Enter Branch Name (no spaces):" the_branch ; \
+	git checkout -b config-$${the_branch} ; \
+	git push -u origin config-$${the_branch}
