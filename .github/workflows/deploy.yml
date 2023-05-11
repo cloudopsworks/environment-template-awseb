@@ -13,6 +13,8 @@ on:
       - "modules/**"
       - ".beacon"
       - ".destroy"
+      - OWNERS
+      - README.md
 
 concurrency: environment-awseb
 
