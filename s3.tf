@@ -12,12 +12,13 @@ module "versions_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "3.4.0"
 
-  bucket                  = local.application_versions_bucket
-  acl                     = "private"
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  bucket                                = local.application_versions_bucket
+  acl                                   = "private"
+  block_public_acls                     = true
+  block_public_policy                   = true
+  ignore_public_acls                    = true
+  restrict_public_buckets               = true
+  attach_deny_insecure_transport_policy = true
 
   versioning = {
     enabled = true
@@ -70,17 +71,18 @@ module "logs_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "3.4.0"
 
-  bucket                         = local.load_balancer_log_bucket
-  acl                            = "log-delivery-write"
-  block_public_acls              = true
-  block_public_policy            = true
-  ignore_public_acls             = true
-  restrict_public_buckets        = true
-  force_destroy                  = true
-  attach_elb_log_delivery_policy = true # Required for ALB logs
-  attach_lb_log_delivery_policy  = true # Required for ALB/NLB logs
-  control_object_ownership       = true
-  object_ownership               = "ObjectWriter"
+  bucket                                = local.load_balancer_log_bucket
+  acl                                   = "log-delivery-write"
+  block_public_acls                     = true
+  block_public_policy                   = true
+  ignore_public_acls                    = true
+  restrict_public_buckets               = true
+  force_destroy                         = true
+  attach_elb_log_delivery_policy        = true # Required for ALB logs
+  attach_lb_log_delivery_policy         = true # Required for ALB/NLB logs
+  attach_deny_insecure_transport_policy = true
+  control_object_ownership              = true
+  object_ownership                      = "ObjectWriter"
 
   server_side_encryption_configuration = {
     rule = {
