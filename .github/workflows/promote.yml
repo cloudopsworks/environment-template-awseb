@@ -38,10 +38,15 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.BOT_TOKEN }}
 
+      - name: Install yq
+        run: |
+          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.33.3/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
       # Installs Terraform
       - uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.1.7
+          terraform_version: 1.3.3
 
       - name: Create version File
         run: |

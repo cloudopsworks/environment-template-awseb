@@ -39,30 +39,13 @@ module.tf:
 # endif
 
 version: VERSION module.tf
-ifeq ($(OS),Darwin)
-	sed -i "" -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.yaml
-	sed -i "" -e "s/SOURCE_NAME/\"$(CHART)\"/" $(TARGET)-module.yaml
-	sed -i "" -e "s/SOURCE_VERSION/\"$(RELEASE_VERSION)\"/" $(TARGET)-module.yaml
-	sed -i "" -e "s/RELEASE_NAME/\"$(TARGET)\"/" $(TARGET)-module.yaml
-	#sed -i "" -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.yaml
-	sed -i "" -e "s/LOAD_BALANCER_ALIAS/\"$(TARGET)\-ingress\"/" $(TARGET)-module.yaml
+	yq eval -i '.module = "$(TARGET)"' $(TARGET)-module.yaml
+	yq eval -i '.release.name = "$(TARGET)"' $(TARGET)-module.yaml
+	yq eval -i '.release.source.name = "$(CHART)"' $(TARGET)-module.yaml
+	yq eval -i '.release.source.version = "$(RELEASE_VERSION)"' $(TARGET)-module.yaml
 	@if [ "$(PLATFORM)" != "" ] ; then \
-		sed -i "" -e "s/SOLUTION_STACK/$(PLATFORM)/g" $(TARGET)-module.tf ; \
+		yq eval -i '.beanstalk.solution_stack = "$(PLATFORM)"' $(TARGET)-module.yaml ; \
 	fi
-else ifeq ($(OS),Linux)
-	sed -i -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.yaml
-	sed -i -e "s/SOURCE_NAME/\"$(CHART)\"/" $(TARGET)-module.yaml
-	sed -i -e "s/SOURCE_VERSION/\"$(RELEASE_VERSION)\"/" $(TARGET)-module.yaml
-	sed -i -e "s/RELEASE_NAME/\"$(TARGET)\"/" $(TARGET)-module.yaml
-	#sed -i -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.yaml
-	sed -i -e "s/LOAD_BALANCER_ALIAS/\"$(TARGET)\-ingress\"/" $(TARGET)-module.yaml
-	@if [ "$(PLATFORM)" != "" ] ; then \
-		sed -i -e "s/SOLUTION_STACK/$(PLATFORM)/g" $(TARGET)-module.tf ; \
-	fi
-else
-	echo "platfrom $(OS) not supported to release from"
-	exit -1
-endif
 
 VERSION:
 ifeq ($(VERFOUND),1)
