@@ -16,7 +16,6 @@ on:
       - .destroy
       - OWNERS
       - README.md
-      - values/**
 
 concurrency: environment-awseb
 

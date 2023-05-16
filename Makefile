@@ -19,12 +19,12 @@ PLATFORM :=
 .PHONY: update
 
 module.tf:
-	@if [ ! -f $(TARGET)-module.tf ] ; then \
-		echo "Module $(TARGET)-module.tf not found... copying from template" ; \
-		cp template-module.tf_template $(TARGET)-module.tf ; \
+	@if [ ! -f $(TARGET)-module.yaml ] ; then \
+		echo "Module $(TARGET)-module.yaml not found... copying from template" ; \
+		cp template-module.yaml_template $(TARGET)-module.yaml ; \
 		mkdir -p values/${TARGET}/ ; \
 		touch values/$(TARGET)/.placeholder ; \
-	else echo "Module $(TARGET)-module.tf found... all OK" ; \
+	else echo "Module $(TARGET)-module.yaml found... all OK" ; \
 	fi
 # ifeq "" "$(T)"
 # 	$(info )
@@ -40,22 +40,22 @@ module.tf:
 
 version: VERSION module.tf
 ifeq ($(OS),Darwin)
-	sed -i "" -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.tf
-	sed -i "" -e "s/source_name[ \t]*=.*/source_name = \"$(CHART)\"/" $(TARGET)-module.tf
-	sed -i "" -e "s/source_version[ \t]*=.*/source_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
-	sed -i "" -e "s/release_name[ \t]*=.*/release_name = \"$(TARGET)\"/" $(TARGET)-module.tf
-	sed -i "" -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.tf
-	sed -i "" -e "s/load_balancer_alias[ \t]*=.*/load_balancer_alias = \"$(TARGET)\-ingress\"/" $(TARGET)-module.tf
+	sed -i "" -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.yaml
+	sed -i "" -e "s/SOURCE_NAME/\"$(CHART)\"/" $(TARGET)-module.yaml
+	sed -i "" -e "s/SOURCE_VERSION/\"$(RELEASE_VERSION)\"/" $(TARGET)-module.yaml
+	sed -i "" -e "s/RELEASE_NAME/\"$(TARGET)\"/" $(TARGET)-module.yaml
+	#sed -i "" -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.yaml
+	sed -i "" -e "s/LOAD_BALANCER_ALIAS/\"$(TARGET)\-ingress\"/" $(TARGET)-module.yaml
 	@if [ "$(PLATFORM)" != "" ] ; then \
 		sed -i "" -e "s/SOLUTION_STACK/$(PLATFORM)/g" $(TARGET)-module.tf ; \
 	fi
 else ifeq ($(OS),Linux)
-	sed -i -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.tf
-	sed -i -e "s/source_name[ \t]*=.*/source_name = \"$(CHART)\"/" $(TARGET)-module.tf
-	sed -i -e "s/source_version[ \t]*=.*/source_version = \"$(RELEASE_VERSION)\"/" $(TARGET)-module.tf
-	sed -i -e "s/release_name[ \t]*=.*/release_name = \"$(TARGET)\"/" $(TARGET)-module.tf
-	sed -i -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.tf
-	sed -i -e "s/#load_balancer_alias[ \t]*=.*/#load_balancer_alias = \"$(TARGET)\-ingress\"/" $(TARGET)-module.tf
+	sed -i -e "s/MODULE_NAME/$(TARGET)/g" $(TARGET)-module.yaml
+	sed -i -e "s/SOURCE_NAME/\"$(CHART)\"/" $(TARGET)-module.yaml
+	sed -i -e "s/SOURCE_VERSION/\"$(RELEASE_VERSION)\"/" $(TARGET)-module.yaml
+	sed -i -e "s/RELEASE_NAME/\"$(TARGET)\"/" $(TARGET)-module.yaml
+	#sed -i -e "s/load_balancer_log_prefix[ \t]*=.*/load_balancer_log_prefix = \"$(TARGET)\"/" $(TARGET)-module.yaml
+	sed -i -e "s/LOAD_BALANCER_ALIAS/\"$(TARGET)\-ingress\"/" $(TARGET)-module.yaml
 	@if [ "$(PLATFORM)" != "" ] ; then \
 		sed -i -e "s/SOLUTION_STACK/$(PLATFORM)/g" $(TARGET)-module.tf ; \
 	fi
@@ -111,5 +111,5 @@ config: clean
 	git checkout -b config-$${the_branch} ; \
 	git push -u origin config-$${the_branch}
 
-update:
-	find values/ -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum > .values_hash
+#update:
+#	find values/ -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum > .values_hash

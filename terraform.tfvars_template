@@ -16,7 +16,4 @@ artifact_archive_days    = 365
 artifact_retention_years = 3
 versions_archive_days    = 365
 versions_retention_years = 3
-# Version Rollover Highly recommended for PROD/Staging
-#versions_rollover_number = 10
-# Version Rollover Default for DEV
-#versions_rollover_number = 1
+
