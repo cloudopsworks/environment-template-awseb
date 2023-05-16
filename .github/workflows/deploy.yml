@@ -8,13 +8,15 @@ on:
   push:
     branches:
       - master
+      - main
     paths-ignore:
       - ".github/workflows/**"
-      - "modules/**"
-      - ".beacon"
-      - ".destroy"
+      - modules/**"
+      - .beacon"
+      - .destroy
       - OWNERS
       - README.md
+      - values/**
 
 concurrency: environment-awseb
 

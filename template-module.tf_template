@@ -23,7 +23,7 @@ module "MODULE_NAME_dns" {
 
 module "MODULE_NAME_version" {
   source           = "cloudopsworks/beanstalk-version/aws"
-  version          = "1.0.2"
+  version          = "1.0.5"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
 
@@ -45,7 +45,7 @@ module "MODULE_NAME_version" {
 
 module "MODULE_NAME_app" {
   source           = "cloudopsworks/beanstalk-deploy/aws"
-  version          = "1.0.0"
+  version          = "1.0.3"
   region           = var.region
   sts_assume_role  = var.sts_assume_role
 
@@ -116,12 +116,29 @@ module "MODULE_NAME_app" {
   #   }
   # ]
 
-  # Optional variable injection other than standard values/MODULE_NAME-values.yaml
-  #
-  # vars = {
-  #   "var"          = "DATA"
-  #   "varfile"      = file("textfile.txt)
-  #   "encoded file" = filebas64("binaryfile.bin")
+  ##
+  # Optional variable for adding extra tags to the environment
+  # extra_tags = {
+  #   "tag1" = "value1"
+  #   "tag2" = "value2"
   # }
+
+  ##
+  # Optional variable for mapping extra Elastic Beanstalk configurations
+  #extra_settings = [
+  #  {
+  #    name      = "SETTING_NAME"
+  #    namespace = "aws:NAMESPACE"
+  #    resource  = ""
+  #    value     = "<VALUE>"
+  #  }
+  #  , {
+  #    name      = "SETTING_NAME_2"
+  #    namespace = "aws:NAMESPACE_2"
+  #    resource  = ""
+  #    value     = "<VALUE>"
+  #  }
+  #]
+
 }
 

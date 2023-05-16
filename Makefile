@@ -16,6 +16,7 @@ PLATFORM :=
 .PHONY: version
 .PHONY: module.tf
 .PHONY: config
+.PHONY: update
 
 module.tf:
 	@if [ ! -f $(TARGET)-module.tf ] ; then \
@@ -109,3 +110,6 @@ config: clean
 	@read -p "Enter Branch Name (no spaces):" the_branch ; \
 	git checkout -b config-$${the_branch} ; \
 	git push -u origin config-$${the_branch}
+
+update:
+	find values/ -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum > .values_hash
