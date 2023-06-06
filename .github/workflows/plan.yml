@@ -90,7 +90,7 @@ jobs:
         run: mkdir -p ./.plans
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -out ./.plans/plan.out
+        run: terraform plan -no-color -input=false -out ./.plans/plan.out
         continue-on-error: ${{ steps.check_automatic.outputs.autoapprove != 'true' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
