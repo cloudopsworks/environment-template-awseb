@@ -23,7 +23,9 @@ permissions:
   issues: write
   checks: write
 
-concurrency: environment-awseb
+concurrency:
+  group: environment-awseb
+  cancel-in-progress: false
 
 jobs:
   plan:

@@ -18,7 +18,9 @@ permissions:
   packages: read
   statuses: write
 
-concurrency: environment-awseb-promo
+concurrency:
+  group: environment-awseb-promo
+  cancel-in-progress: false
 
 jobs:
   env-promotion:

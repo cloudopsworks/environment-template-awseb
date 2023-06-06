@@ -17,7 +17,9 @@ on:
       - OWNERS
       - README.md
 
-concurrency: environment-awseb
+concurrency:
+  group: environment-awseb
+  cancel-in-progress: false
 
 jobs:
   deploy:

@@ -11,6 +11,11 @@ on:
       - rollback-command
       - reject-command
       - close-command
+
+concurrency:
+  group: environment-awseb
+  cancel-in-progress: false
+
 permissions:
   issues: write
   contents: write
