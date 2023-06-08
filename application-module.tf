@@ -46,7 +46,7 @@ module "version" {
   # Uncomment below to override the default source for the solution stack
   #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
   force_source_compressed = can(each.value.release.source.force_compressed) ? each.value.release.source.force_compressed : false
-  source_compressed_type  = can(each.value.release.source.compressed_type) ? each.value.release.source.compressed_type : null
+  source_compressed_type  = can(each.value.release.source.compressed_type) ? each.value.release.source.compressed_type : "zip"
 
   application_versions_bucket = local.application_versions_bucket
 
