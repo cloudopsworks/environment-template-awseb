@@ -94,5 +94,7 @@ config: clean
 	git checkout -b config-$${the_branch} ; \
 	git push -u origin config-$${the_branch}
 
-#update:
-#	find values/ -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum > .values_hash
+update:
+	@for release_name in $$(ls -1 values/) ; do \
+		find values/$${release_name} -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum > .values_hash_$${release_name} ; \
+	done

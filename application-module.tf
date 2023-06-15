@@ -18,7 +18,7 @@ module "dns" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-dns/aws"
-  version         = "1.0.1"
+  version         = "1.0.2"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -33,7 +33,7 @@ module "version" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-version/aws"
-  version         = "1.0.2"
+  version         = "1.0.5"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -51,14 +51,15 @@ module "version" {
   application_versions_bucket = local.application_versions_bucket
 
   beanstalk_application = each.value.beanstalk.application
-  #source_folder         = "values/${each.value.release.name}"
+  config_source_folder  = format("%s/%s", "values", each.value.release.name)
+  config_hash_file      = format("%s_%s", ".values_hash", each.value.release.name)
 }
 
 module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.3"
+  version         = "1.0.4"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
