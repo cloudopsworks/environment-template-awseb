@@ -12,7 +12,7 @@ data "aws_sns_topic" "topic_destination" {
 resource "aws_cloudwatch_metric_alarm" "metric_alarm" {
   for_each = local.alarm_configurations
 
-  alarm_name          = format("MetricsAlarm-%s-%s-%s", var.region, var.release_name, var.namespace)
+  alarm_name          = format("MetricsAlarm-%s-%s-%s", var.region, each.value.release.name, var.namespace)
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"
   threshold           = each.value.alarms.threshold
