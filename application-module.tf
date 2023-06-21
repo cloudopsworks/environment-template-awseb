@@ -8,6 +8,19 @@ locals {
     for f in fileset(path.module, "*-module.yaml") :
     basename(f) => yamldecode(file(f))
   }
+  alarm_configurations = {
+    for k, v in local.configurations :
+    k => v
+    if try(v.alarms.enabled, false)
+  }
+  tags = {
+    for k, v in local.configurations :
+    k => merge(v.beanstalk.extra_tags, {
+      Environment = format("%s-%s", v.release.name, var.namespace)
+      Namespace   = var.namespace
+      Release     = v.release.name
+    })
+  }
 }
 
 ##
@@ -18,15 +31,17 @@ module "dns" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-dns/aws"
-  version         = "1.0.2"
+  version         = "1.0.3"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
-  release_name                = each.value.release.name
-  namespace                   = var.namespace
-  domain_name                 = each.value.dns.domain_name
-  domain_name_alias_prefix    = each.value.dns.alias_prefix
-  beanstalk_environment_cname = module.app[each.key].environment_cname
+  release_name             = each.value.release.name
+  namespace                = var.namespace
+  domain_name              = each.value.dns.domain_name
+  domain_name_alias_prefix = each.value.dns.alias_prefix
+  domain_alias             = true
+  alias_cname              = module.app[each.key].environment_cname
+  alias_zone_id            = module.app[each.key].environment_zone_id
 }
 
 module "version" {
@@ -59,7 +74,7 @@ module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.4"
+  version         = "1.0.5"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 

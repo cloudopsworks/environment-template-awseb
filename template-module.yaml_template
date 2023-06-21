@@ -11,6 +11,12 @@ release:
 dns:
   domain_name: DOMAIN_NAME
   alias_prefix: ALIAS_PREFIX
+alarms:
+  enabled: false
+  threshold: 15
+  period: 120
+  evaluation_periods: 2
+  destination_topic: DESTINATION_SNS
 beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
