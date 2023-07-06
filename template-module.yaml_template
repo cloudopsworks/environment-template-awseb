@@ -50,6 +50,9 @@ beanstalk:
     server_types:
       - SERVER TYPE1
       - SERVER TYPE2
+#    pool: # Instance Pool elasticity minimum & maximum number of instances
+#      min: 1
+#      max: 1
   networking:
     private_subnets: []
 #      - SUBNET_ID

@@ -31,7 +31,7 @@ module "dns" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-dns/aws"
-  version         = "1.0.3"
+  version         = "1.0.4"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -99,6 +99,8 @@ module "app" {
   beanstalk_instance_volume_type = each.value.beanstalk.instance.volume_type
   beanstalk_instance_profile     = can(each.value.beanstalk.iam.instance_profile) ? each.value.beanstalk.iam.instance_profile : null
   beanstalk_service_role         = can(each.value.beanstalk.iam.service_role) ? each.value.beanstalk.iam.service_role : null
+  beanstalk_min_instances        = try(each.value.beanstalk.instance.pool.min, 1)
+  beanstalk_max_instances        = try(each.value.beanstalk.instance.pool.max, 1)
 
   load_balancer_public             = each.value.beanstalk.load_balancer.public
   load_balancer_log_bucket         = local.load_balancer_log_bucket
