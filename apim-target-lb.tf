@@ -11,7 +11,7 @@ resource "aws_lb" "apigw_rest_lb" {
   name = "api-gw-nlb-${lower(each.value.release.name)}-${var.namespace}"
   internal = ! each.value.beanstalk.load_balancer.public
   load_balancer_type = "network"
-  subnets = each.value.beanstalk.load_balancer.public ? each.value.networking.public_subnets : each.value.networking.private_subnets
+  subnets = each.value.beanstalk.load_balancer.public ? each.value.beanstalk.networking.public_subnets : each.value.beanstalk.networking.private_subnets
   tags = local.tags[each.key]
 }
 

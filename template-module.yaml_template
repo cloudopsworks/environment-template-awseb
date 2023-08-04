@@ -17,6 +17,8 @@ alarms:
   period: 120
   evaluation_periods: 2
   destination_topic: DESTINATION_SNS
+api_gateway:
+  enabled: false
 beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
