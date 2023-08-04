@@ -13,6 +13,11 @@ locals {
     k => v
     if try(v.alarms.enabled, false)
   }
+  apigw_nlb_configurations = {
+    for k, v in local.configurations :
+    k => v
+    if try(v.api_gateway.enabled, false)
+  }
   tags = {
     for k, v in local.configurations :
     k => merge(v.beanstalk.extra_tags, {
@@ -74,7 +79,7 @@ module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.5"
+  version         = "1.0.7"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
