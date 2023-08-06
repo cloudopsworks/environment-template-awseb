@@ -19,6 +19,12 @@ alarms:
   destination_topic: DESTINATION_SNS
 api_gateway:
   enabled: false
+  vpc_link:
+    use_existing: false
+    #link_name: VPC_LINK_NAME
+    #lb_name: LOAD_BALANCER_NAME
+    #listener_port: 8443
+    #to_port: 443
 beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"

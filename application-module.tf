@@ -13,10 +13,15 @@ locals {
     k => v
     if try(v.alarms.enabled, false)
   }
+  apiqw_nlb_vpc_links = {
+    for k, v in local.configurations :
+    k => v
+    if try(v.api_gateway.enabled, false) && try(v.api_gateway.vpc_link.use_existing, false)
+  }
   apigw_nlb_configurations = {
     for k, v in local.configurations :
     k => v
-    if try(v.api_gateway.enabled, false)
+    if try(v.api_gateway.enabled, false) && try(!v.api_gateway.vpc_link.use_existing, true)
   }
   tags = {
     for k, v in local.configurations :
