@@ -10,7 +10,7 @@
 resource "aws_api_gateway_vpc_link" "apigw_rest_link" {
   for_each = local.apigw_nlb_configurations
 
-  name        = "api-gw-nlb-${lower(each.value.release.name)}-${var.namespace}-nlb-link"
+  name        = try(each.value.api_gateway.vpc_link.link_name, "api-gw-nlb-${lower(each.value.release.name)}-${var.namespace}-nlb-link")
   description = "VPC Link for API Gateway to NLB: api-gw-nlb-${lower(each.value.release.name)}-${var.namespace}"
   target_arns = [aws_lb.apigw_rest_lb[each.key].arn]
   tags        = local.tags[each.key]
@@ -86,7 +86,14 @@ resource "aws_lb_target_group" "apigw_rest_lb_tg_link" {
   protocol    = "TCP"
   port        = try(each.value.api_gateway.vpc_link.to_port, each.value.api_gateway.vpc_link.listener_port)
   vpc_id      = each.value.beanstalk.networking.vpc_id
-  tags        = local.tags[each.key]
+
+  health_check {
+    enabled  = true
+    protocol = try(each.value.api_gateway.vpc_link.health.protocol, "TCP")
+    matcher  = try(each.value.api_gateway.vpc_link.health.http_status, "")
+    path     = try(each.value.api_gateway.vpc_link.health.path, "")
+  }
+  tags = local.tags[each.key]
 }
 
 resource "aws_lb_target_group_attachment" "apigw_rest_lb_tg_att_link" {

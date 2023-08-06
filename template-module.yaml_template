@@ -20,11 +20,15 @@ alarms:
 api_gateway:
   enabled: false
   vpc_link:
+#    link_name: VPC_LINK_NAME # Optional: only valid when existing link is NOT used
     use_existing: false
-    #link_name: VPC_LINK_NAME
-    #lb_name: LOAD_BALANCER_NAME
-    #listener_port: 8443
-    #to_port: 443
+#    lb_name: LOAD_BALANCER_NAME
+#    listener_port: 8443
+#    to_port: 443
+#    health: # Enable this and below to change the type of healthcheck
+#      protocol: HTTPS
+#      http_status: "200-401"
+#      path: "/"
 beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
