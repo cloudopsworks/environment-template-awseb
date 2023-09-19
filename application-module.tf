@@ -84,7 +84,7 @@ module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.7"
+  version         = "1.0.8"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 

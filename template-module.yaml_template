@@ -35,6 +35,8 @@ beanstalk:
   #   java11    = "^64bit Amazon Linux 2 (.*) Corretto 11(.*)$"
   #   node      = "^64bit Amazon Linux 2 (.*) Node.js 12(.*)$"
   #   node14    = "^64bit Amazon Linux 2 (.*) Node.js 14(.*)$"
+  #   node16    = "^64bit Amazon Linux 2 (.*) Node.js 16 AL2 (.*)$"
+  #   node18    = "^64bit Amazon Linux 2 (.*) Node.js 18 AL2 (.*)$"
   #   go        = "^64bit Amazon Linux 2 (.*) Go (.*)$"
   #   docker    = "^64bit Amazon Linux 2 (.*) Docker (.*)$"
   #   docker-m  = "^64bit Amazon Linux 2 (.*) Multi-container Docker (.*)$"
