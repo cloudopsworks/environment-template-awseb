@@ -4,6 +4,10 @@ release:
   source:
     name: SOURCE_NAME
     version: SOURCE_VERSION
+    # Optional: only is used on deployments that are supporting GitHub Packages via GitFlow Workflow
+#    githubPackages:
+#      name: PACKAGE_NAME
+#      type: PACKAGE_TYPE
     # Uncomment below to override the default source for the solution stack
     #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
 #    force_compressed: true

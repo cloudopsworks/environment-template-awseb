@@ -28,7 +28,7 @@ This will create a new Branch with following naming:
 * config-< declarative branch name >
 *  Run Following command on the new branch
   ```shell
-  make config
+  make env/config
   ```
 * Do all configuration changes on **./values/**
 
@@ -49,7 +49,7 @@ setup this environment and maintain the S3 Bucket and deployment pipeline. <br/>
 
 First step is to run the following command:
 ```shell
-make init
+make env/init
 ```
 
 ### Create OWNERS file
