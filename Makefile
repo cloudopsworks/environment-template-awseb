@@ -16,7 +16,7 @@ CHART :=
 PLATFORM :=
 PACKAGE_NAME :=
 PACKAGE_TYPE :=
-YQ := $(INSTALL_DIR)/yq
+YQ := $(INSTALL_PATH)/yq
 
 #.PHONY: VERSION
 #.PHONY: version
@@ -45,7 +45,7 @@ module.tf:
 # endif
 
 ## Environment versioning edition of module.yaml
-env/version: VERSION module.tf
+env/version: VERSION module.tf packages/install/yq
 	$(set-assert YQ)
 	$(YQ) e -i '.module = "$(TARGET)"' $(TARGET)-module.yaml
 	$(YQ) e -i '.release.name = "$(TARGET)"' $(TARGET)-module.yaml
