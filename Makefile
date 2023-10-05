@@ -34,7 +34,7 @@ module.tf:
 	fi
 # ifeq "" "$(T)"
 # 	$(info )
-# ifeq ($(OS),Darwin)
+# ifeq ($(OS),darwin)
 # else ifeq ($(OS),Linux)
 # else
 # 	echo "platfrom $(OS) not supported to release from"
@@ -89,7 +89,7 @@ env/init/template:
 
 ## Environment initialization
 env/init: env/init/template
-ifeq ($(OS),Darwin)
+ifeq ($(OS),darwin)
 	sed -i "" -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
 else ifeq ($(OS),Linux)
 	sed -i -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
