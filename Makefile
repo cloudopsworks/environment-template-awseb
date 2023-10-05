@@ -7,7 +7,6 @@ TRONADOR_AUTO_INIT := true
 
 -include $(shell curl -sSL -o .tronador "https://cowk.io/acc"; echo .tronador)
 
-OS := $(shell uname)
 PWD := $(shell pwd)
 CURR := $(shell basename $(PWD))
 VERFOUND := $(shell [ -f VERSION ] && echo 1 || echo 0)
