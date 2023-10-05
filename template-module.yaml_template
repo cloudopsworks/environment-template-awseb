@@ -37,6 +37,7 @@ beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
   #   java11    = "^64bit Amazon Linux 2 (.*) Corretto 11(.*)$"
+  #   java17    = "^64bit Amazon Linux 2 (.*) Corretto 17(.*)$"
   #   node      = "^64bit Amazon Linux 2 (.*) Node.js 12(.*)$"
   #   node14    = "^64bit Amazon Linux 2 (.*) Node.js 14(.*)$"
   #   node16    = "^64bit Amazon Linux 2 (.*) Node.js 16 AL2 (.*)$"

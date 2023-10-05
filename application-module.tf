@@ -79,9 +79,9 @@ module "version" {
   config_source_folder  = format("%s/%s", "values", each.value.release.name)
   config_hash_file      = format("%s_%s", ".values_hash", each.value.release.name)
 
-  github_package = can(each.value.release.source.githubPackages.name) && can(each.value.release.source.githubPackages.type)
-  package_name   = can(each.value.release.source.githubPackages.name) ? each.value.release.source.githubPackages.name : ""
-  package_type   = can(each.value.release.source.githubPackages.type) ? each.value.release.source.githubPackages.type : ""
+  github_package = try(each.value.release.source.githubPackages.name, "") != "" && try(each.value.release.source.githubPackages.type, "") != ""
+  package_name   = try(each.value.release.source.githubPackages.name, "")
+  package_type   = try(each.value.release.source.githubPackages.type, "")
 }
 
 module "app" {
