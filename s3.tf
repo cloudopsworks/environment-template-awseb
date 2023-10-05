@@ -19,6 +19,8 @@ module "versions_bucket" {
   ignore_public_acls                    = true
   restrict_public_buckets               = true
   attach_deny_insecure_transport_policy = true
+  control_object_ownership              = true
+  object_ownership                      = "ObjectWriter"
 
   versioning = {
     enabled = true
