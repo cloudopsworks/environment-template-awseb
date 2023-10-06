@@ -109,7 +109,7 @@ endif
 	fi
 
 ## Config Branch Creation procedure
-env/config: clean
+env/config: env/clean
 	@read -p "Enter Branch Name (no spaces):" the_branch ; \
 	git checkout -b config-$${the_branch} ; \
 	git push -u origin config-$${the_branch}
