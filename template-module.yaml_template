@@ -12,6 +12,7 @@ release:
     #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
     #force_compressed: true
     #compressed_type: zip
+  extra_run_command:
 dns:
   domain_name: DOMAIN_NAME
   alias_prefix: ALIAS_PREFIX
