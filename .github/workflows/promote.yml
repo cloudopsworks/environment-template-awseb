@@ -40,11 +40,6 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.BOT_TOKEN }}
 
-      - name: Install yq
-        run: |
-          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.33.3/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
-
       # Installs Terraform
       - uses: hashicorp/setup-terraform@v2
         with:
@@ -56,10 +51,12 @@ jobs:
           echo "CHART=${{ github.event.client_payload.promote.repository }}" >> VERSION
           echo "TARGET=${{ github.event.client_payload.promote.releasename }}" >> VERSION
           echo "PLATFORM=${{ github.event.client_payload.promote.platform }}" >> VERSION
+          echo "PACKAGE_NAME=${{ github.event.client_payload.promote.packagename }}" >> VERSION
+          echo "PACKAGE_TYPE=${{ github.event.client_payload.promote.packagetype }}" >> VERSION
 
       - name: Push change for release
         run: |
-          make version
+          make env/version
 
       # Do Tidy on terraform Files
       - name: Terraform tidy up

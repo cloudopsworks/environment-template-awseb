@@ -48,3 +48,6 @@ modules/**/temp/**
 .classpath
 .settings
 
+# Tronador excludes
+.tronador
+tronador/

@@ -58,7 +58,7 @@ module "version" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-version/aws"
-  version         = "1.0.5"
+  version         = "1.0.7"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -78,6 +78,12 @@ module "version" {
   beanstalk_application = each.value.beanstalk.application
   config_source_folder  = format("%s/%s", "values", each.value.release.name)
   config_hash_file      = format("%s_%s", ".values_hash", each.value.release.name)
+
+  github_package = try(each.value.release.source.githubPackages.name, "") != "" && try(each.value.release.source.githubPackages.type, "") != ""
+  package_name   = try(each.value.release.source.githubPackages.name, "")
+  package_type   = try(each.value.release.source.githubPackages.type, "")
+
+  extra_run_command = try(each.value.release.extra_run_command, "")
 }
 
 module "app" {
