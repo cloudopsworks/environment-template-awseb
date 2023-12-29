@@ -11,12 +11,12 @@ on:
       - main
     paths-ignore:
       - ".github/workflows/**"
-      - modules/**"
-      - .beacon"
+      - "modules/**"
+      - .beacon
       - .destroy
       - OWNERS
       - README.md
-      - values/**
+      - "values/**"
 
 concurrency:
   group: environment-awseb
