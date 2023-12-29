@@ -7,7 +7,6 @@ TRONADOR_AUTO_INIT := true
 
 -include $(shell curl -sSL -o .tronador "https://cowk.io/acc"; echo .tronador)
 
-OS := $(shell uname)
 PWD := $(shell pwd)
 CURR := $(shell basename $(PWD))
 VERFOUND := $(shell [ -f VERSION ] && echo 1 || echo 0)
@@ -17,7 +16,7 @@ CHART :=
 PLATFORM :=
 PACKAGE_NAME :=
 PACKAGE_TYPE :=
-YQ := $(INSTALL_DIR)/yq
+YQ := $(INSTALL_PATH)/yq
 
 #.PHONY: VERSION
 #.PHONY: version
@@ -35,8 +34,8 @@ module.tf:
 	fi
 # ifeq "" "$(T)"
 # 	$(info )
-# ifeq ($(OS),Darwin)
-# else ifeq ($(OS),Linux)
+# ifeq ($(OS),darwin)
+# else ifeq ($(OS),linux)
 # else
 # 	echo "platfrom $(OS) not supported to release from"
 # 	exit -1
@@ -46,7 +45,7 @@ module.tf:
 # endif
 
 ## Environment versioning edition of module.yaml
-env/version: VERSION module.tf
+env/version: VERSION module.tf packages/install/yq
 	$(set-assert YQ)
 	$(YQ) e -i '.module = "$(TARGET)"' $(TARGET)-module.yaml
 	$(YQ) e -i '.release.name = "$(TARGET)"' $(TARGET)-module.yaml
@@ -90,9 +89,9 @@ env/init/template:
 
 ## Environment initialization
 env/init: env/init/template
-ifeq ($(OS),Darwin)
+ifeq ($(OS),darwin)
 	sed -i "" -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
-else ifeq ($(OS),Linux)
+else ifeq ($(OS),linux)
 	sed -i -e "s/default_bucket_prefix[ \t]*=.*/default_bucket_prefix = \"$(CURR)\"/" terraform.tfvars
 else
 	echo "platfrom $(OS) not supported to release from"
@@ -110,7 +109,7 @@ endif
 	fi
 
 ## Config Branch Creation procedure
-env/config: clean
+env/config: env/clean
 	@read -p "Enter Branch Name (no spaces):" the_branch ; \
 	git checkout -b config-$${the_branch} ; \
 	git push -u origin config-$${the_branch}

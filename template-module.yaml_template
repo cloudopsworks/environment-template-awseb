@@ -12,6 +12,7 @@ release:
     #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
 #    force_compressed: true
 #    compressed_type: zip
+  extra_run_command:
 dns:
   domain_name: DOMAIN_NAME
   alias_prefix: ALIAS_PREFIX
@@ -37,6 +38,7 @@ beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
   #   java11    = "^64bit Amazon Linux 2 (.*) Corretto 11(.*)$"
+  #   java17    = "^64bit Amazon Linux 2 (.*) Corretto 17(.*)$"
   #   node      = "^64bit Amazon Linux 2 (.*) Node.js 12(.*)$"
   #   node14    = "^64bit Amazon Linux 2 (.*) Node.js 14(.*)$"
   #   node16    = "^64bit Amazon Linux 2 (.*) Node.js 16 AL2 (.*)$"
@@ -53,6 +55,11 @@ beanstalk:
     instance_profile: INSTANCE_PROFILE
     service_role: SERVICE_ROLE
   load_balancer:
+    # Shared Load Balancer configuration subset
+    #shared:
+    #  enabled: false
+    #  name: SHARED_LB_NAME
+    #  weight: 100
     public: true
     ssl_certificate_id: SSL_CERTIFICATE_ID
     ssl_policy: ELBSecurityPolicy-2016-08

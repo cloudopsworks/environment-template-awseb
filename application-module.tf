@@ -38,7 +38,10 @@ locals {
 #   - This can be commented out to disable DNS management (not recommended)
 #
 module "dns" {
-  for_each = local.configurations
+  for_each = {
+    for k, v in local.configurations : k => v
+    if !try(v.beanstalk.load_balancer.shared.enabled, false)
+  }
 
   source          = "cloudopsworks/beanstalk-dns/aws"
   version         = "1.0.4"
@@ -58,7 +61,7 @@ module "version" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-version/aws"
-  version         = "1.0.6"
+  version         = "1.0.7"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -79,16 +82,18 @@ module "version" {
   config_source_folder  = format("%s/%s", "values", each.value.release.name)
   config_hash_file      = format("%s_%s", ".values_hash", each.value.release.name)
 
-  github_package = can(each.value.release.source.githubPackages.name) && can(each.value.release.source.githubPackages.type)
-  package_name = can(each.value.release.source.githubPackages.name) ? each.value.release.source.githubPackages.name : ""
-  package_type =can(each.value.release.source.githubPackages.type) ? each.value.release.source.githubPackages.type : ""
+  github_package = try(each.value.release.source.githubPackages.name, "") != "" && try(each.value.release.source.githubPackages.type, "") != ""
+  package_name   = try(each.value.release.source.githubPackages.name, "")
+  package_type   = try(each.value.release.source.githubPackages.type, "")
+
+  extra_run_command = try(each.value.release.extra_run_command, "")
 }
 
 module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.8"
+  version         = "1.0.9"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -116,6 +121,9 @@ module "app" {
   beanstalk_min_instances        = try(each.value.beanstalk.instance.pool.min, 1)
   beanstalk_max_instances        = try(each.value.beanstalk.instance.pool.max, 1)
 
+  load_balancer_shared             = try(each.value.beanstalk.load_balancer.shared.enabled, false)
+  load_balancer_shared_name        = try(each.value.beanstalk.load_balancer.shared.name, "")
+  load_balancer_shared_weight      = try(each.value.beanstalk.load_balancer.shared.weight, 100)
   load_balancer_public             = each.value.beanstalk.load_balancer.public
   load_balancer_log_bucket         = local.load_balancer_log_bucket
   load_balancer_log_prefix         = each.value.release.name
