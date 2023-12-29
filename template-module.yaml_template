@@ -10,8 +10,8 @@ release:
     #  type: PACKAGE_TYPE
     # Uncomment below to override the default source for the solution stack
     #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
-    #force_compressed: true
-    #compressed_type: zip
+#    force_compressed: true
+#    compressed_type: zip
   extra_run_command:
 dns:
   domain_name: DOMAIN_NAME
@@ -55,6 +55,11 @@ beanstalk:
     instance_profile: INSTANCE_PROFILE
     service_role: SERVICE_ROLE
   load_balancer:
+    # Shared Load Balancer configuration subset
+    #shared:
+    #  enabled: false
+    #  name: SHARED_LB_NAME
+    #  weight: 100
     public: true
     ssl_certificate_id: SSL_CERTIFICATE_ID
     ssl_policy: ELBSecurityPolicy-2016-08

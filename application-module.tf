@@ -38,7 +38,10 @@ locals {
 #   - This can be commented out to disable DNS management (not recommended)
 #
 module "dns" {
-  for_each = local.configurations
+  for_each = {
+    for k, v in local.configurations : k => v
+    if !try(v.beanstalk.load_balancer.shared.enabled, false)
+  }
 
   source          = "cloudopsworks/beanstalk-dns/aws"
   version         = "1.0.4"
@@ -90,7 +93,7 @@ module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.8"
+  version         = "1.0.9"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -118,6 +121,9 @@ module "app" {
   beanstalk_min_instances        = try(each.value.beanstalk.instance.pool.min, 1)
   beanstalk_max_instances        = try(each.value.beanstalk.instance.pool.max, 1)
 
+  load_balancer_shared             = try(each.value.beanstalk.load_balancer.shared.enabled, false)
+  load_balancer_shared_name        = try(each.value.beanstalk.load_balancer.shared.name, "")
+  load_balancer_shared_weight      = try(each.value.beanstalk.load_balancer.shared.weight, 100)
   load_balancer_public             = each.value.beanstalk.load_balancer.public
   load_balancer_log_bucket         = local.load_balancer_log_bucket
   load_balancer_log_prefix         = each.value.release.name
