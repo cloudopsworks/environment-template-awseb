@@ -132,6 +132,7 @@ module "app" {
   load_balancer_alias              = can(each.value.beanstalk.load_balancer.alias) ? each.value.beanstalk.load_balancer.alias : null
 
   port_mappings  = each.value.beanstalk.port_mappings
+  rule_mappings  = try(each.value.beanstalk.rule_mappings, [])
   extra_tags     = each.value.beanstalk.extra_tags
   extra_settings = each.value.beanstalk.extra_settings
 }
