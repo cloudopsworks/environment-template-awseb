@@ -26,6 +26,10 @@ permissions:
   issues: write
   checks: write
 
+concurrency:
+  group: environment-awseb
+  cancel-in-progress: false
+
 jobs:
   automerge:
     runs-on: ubuntu-latest
