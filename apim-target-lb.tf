@@ -43,6 +43,14 @@ resource "aws_lb_target_group" "apigw_rest_lb_tg" {
   protocol    = "TCP"
   port        = 443
   vpc_id      = each.value.beanstalk.networking.vpc_id
+
+  health_check {
+    enabled  = try(each.value.api_gateway.vpc_link.health.enabled, false)
+    protocol = try(each.value.api_gateway.vpc_link.health.protocol, "TCP")
+    matcher  = try(each.value.api_gateway.vpc_link.health.http_status, "")
+    path     = try(each.value.api_gateway.vpc_link.health.path, "")
+  }
+
   tags        = local.tags[each.key]
 }
 

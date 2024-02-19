@@ -5,9 +5,9 @@ release:
     name: SOURCE_NAME
     version: SOURCE_VERSION
     # Optional: only is used on deployments that are supporting GitHub Packages via GitFlow Workflow
-#    githubPackages:
-#      name: PACKAGE_NAME
-#      type: PACKAGE_TYPE
+    #githubPackages:
+    #  name: PACKAGE_NAME
+    #  type: PACKAGE_TYPE
     # Uncomment below to override the default source for the solution stack
     #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
 #    force_compressed: true
@@ -25,15 +25,16 @@ alarms:
 api_gateway:
   enabled: false
   vpc_link:
-#    link_name: VPC_LINK_NAME # Optional: only valid when existing link is NOT used
+    #link_name: VPC_LINK_NAME # Optional: only valid when existing link is NOT used
     use_existing: false
-#    lb_name: LOAD_BALANCER_NAME
-#    listener_port: 8443
-#    to_port: 443
-#    health: # Enable this and below to change the type of healthcheck
-#      protocol: HTTPS
-#      http_status: "200-401"
-#      path: "/"
+    #lb_name: LOAD_BALANCER_NAME
+    #listener_port: 8443
+    #to_port: 443
+    #health: # Enable this and below to change the type of healthcheck
+    #  enabled: true
+    #  protocol: HTTPS
+    #  http_status: "200-401"
+    #  path: "/"
 beanstalk:
   # Solution stack is one of:
   #   java      = "^64bit Amazon Linux 2 (.*) Corretto 8(.*)$"
@@ -75,9 +76,9 @@ beanstalk:
     server_types:
       - SERVER TYPE1
       - SERVER TYPE2
-#    pool: # Instance Pool elasticity minimum & maximum number of instances
-#      min: 1
-#      max: 1
+    #pool: # Instance Pool elasticity minimum & maximum number of instances
+    #  min: 1
+    #  max: 1
   networking:
     private_subnets: []
 #      - SUBNET_ID
