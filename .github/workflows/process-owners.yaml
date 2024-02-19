@@ -4,6 +4,8 @@
 #
 name: Process OWNERS file for configuration changes
 on:
+  workflow_dispatch:
+
   push:
     branches:
       - master

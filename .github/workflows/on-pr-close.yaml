@@ -1,0 +1,40 @@
+##
+# (c) 2022 - Cloud Ops Works LLC - https://cloudops.works/
+#            On GitHub: https://github.com/cloudopsworks
+#            Distributed Under Apache v2.0 License
+#
+name: PR close Cleanup Branches
+on:
+  pull_request_target:
+    types:
+      - closed
+
+permissions:
+  contents: write
+  packages: read
+  statuses: read
+  pull-requests: write
+  issues: read
+  checks: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const branch = '${{ github.event.pull_request.head.ref }}';
+            const base_branch = '${{ github.event.pull_request.base.ref }}';
+            const merged = ${{ github.event.pull_request.merged }};
+            
+            if ( branch === 'main' || branch === 'master' || branch === base_branch ) {
+              console.error(`Branch ${branch} is protected and cannot be deleted`);
+            } else if ( merged ) {            
+              github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `heads/${branch}`
+              });
+            }
