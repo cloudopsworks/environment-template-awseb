@@ -31,6 +31,7 @@ api_gateway:
     #listener_port: 8443
     #to_port: 443
     #health: # Enable this and below to change the type of healthcheck
+    #  enabled: true
     #  protocol: HTTPS
     #  http_status: "200-401"
     #  path: "/"
