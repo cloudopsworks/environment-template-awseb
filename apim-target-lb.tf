@@ -51,7 +51,7 @@ resource "aws_lb_target_group" "apigw_rest_lb_tg" {
     path     = try(each.value.api_gateway.vpc_link.health.path, "")
   }
 
-  tags        = local.tags[each.key]
+  tags = local.tags[each.key]
 }
 
 resource "aws_lb_target_group_attachment" "apigw_rest_lb_tg_att" {
