@@ -27,7 +27,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: environment-awseb
+  group: environment-awseb-automerge
   cancel-in-progress: false
 
 jobs:
@@ -39,6 +39,6 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.BOT_TOKEN }}"
           MERGE_LABELS: "approved,!do-not-merge"
           UPDATE_LABELS: "approved"
-          MERGE_RETRIES: "10"
+          MERGE_RETRIES: "20"
           MERGE_RETRY_SLEEP: "30000"
           #LOG: "TRACE"
