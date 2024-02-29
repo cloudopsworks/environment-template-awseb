@@ -12,7 +12,7 @@ release:
     #   Supported source_compressed_type: zip, tar, tar.gz, tgz, tar.bz, tar.bz2, etc.
 #    force_compressed: true
 #    compressed_type: zip
-  extra_run_command:
+#  extra_run_command:
 dns:
   domain_name: DOMAIN_NAME
   alias_prefix: ALIAS_PREFIX
@@ -99,6 +99,7 @@ beanstalk:
 #      to_port: 8443
 #      protocol: HTTPS
 #      backend_protocol: HTTPS
+#      health_http_status: "200-401"
 
   ##
   # Optional variable for adding extra tags to the environment
