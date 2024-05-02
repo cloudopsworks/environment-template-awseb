@@ -102,7 +102,7 @@ jobs:
       # Run Terraform Plan to validate all changes
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out ./.plans/plan.out
+        run: terraform plan -no-color -input=false -out ./.plans/plan.out 2>&1 | tee ./.plans/plan.log
         continue-on-error: ${{ steps.check_automatic.outputs.autoapprove != 'true' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_ACCESS_KEY_ID }}
@@ -115,17 +115,22 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: environment-release-plan
-          path: ./.plans/plan.out
+          path: |
+            ./.plans/plan.out
+            ./.plans/plan.log
           #if-no-files-found: error
 
       - uses: actions/github-script@v6
-        #if: github.event_name == 'pull_request'
-        env:
-          #PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-          PLAN: "terraform\n REDACTED (this has problems with outputs larger than 500 bytes"
         with:
           github-token: ${{ secrets.BOT_TOKEN }}
           script: |
+            const fs = require('fs');
+            let plan = fs.readFileSync('./.plans/plan.log', 'utf8');
+            const MAX_GITHUB_COMMENT_LENGTH = 65536;
+
+            if (plan.length > MAX_GITHUB_COMMENT_LENGTH) {
+              plan = "Please review the plan in github actions logs because it's too long"
+            }
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖\`${{ steps.validate.outputs.stdout }}\`
@@ -134,7 +139,7 @@ jobs:
             <details><summary>Show Plan</summary>
             
             \`\`\`\n
-            ${process.env.PLAN}
+            ${plan}
             \`\`\`
             
             </details>
