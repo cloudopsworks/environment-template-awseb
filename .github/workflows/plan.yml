@@ -64,7 +64,7 @@ jobs:
       # Install terraform tools
       - uses: opentofu/setup-opentofu@v1
         with:
-          tofu_version: 1.6.1
+          tofu_version: 1.7.1
 
       # Automatic environment checking from OWNERS file
       # usually this is not automatic for blue-green envs

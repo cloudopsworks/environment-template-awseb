@@ -45,7 +45,7 @@ jobs:
 
       - uses: opentofu/setup-opentofu@v1
         with:
-          tofu_version: 1.6.1
+          tofu_version: 1.7.1
 
       # Get previous tags in order to proceed to generate next version
       - name: Get Previous tag
