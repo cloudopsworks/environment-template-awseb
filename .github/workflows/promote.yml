@@ -41,9 +41,9 @@ jobs:
           token: ${{ secrets.BOT_TOKEN }}
 
       # Installs Terraform
-      - uses: hashicorp/setup-terraform@v3
+      - uses: opentofu/setup-opentofu@v1
         with:
-          terraform_version: 1.3.3
+          tofu_version: 1.6.1
 
       - name: Create version File
         run: |
@@ -58,9 +58,9 @@ jobs:
         run: |
           make env/version
 
-      # Do Tidy on terraform Files
+      # Do Tidy on tofu Files
       - name: Terraform tidy up
-        run: terraform fmt
+        run: tofu fmt
 
       - name: Push change to Branch
         id: push
