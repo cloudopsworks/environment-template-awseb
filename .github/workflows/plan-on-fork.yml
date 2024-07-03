@@ -43,7 +43,7 @@ jobs:
           echo "owner=$repo_owner" >> $GITHUB_OUTPUT
           echo "repo_name=$repo_name" >> $GITHUB_OUTPUT
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.BOT_TOKEN }}
 
@@ -61,7 +61,7 @@ jobs:
           fi
           echo "autoapprove=$is_auto" >> $GITHUB_OUTPUT
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         if: ${{ steps.check_automatic.outputs.autoapprove == 'true' }}
         with:
           github-token: ${{secrets.BOT_TOKEN}}
@@ -82,7 +82,7 @@ jobs:
           echo "count=$count" >> $GITHUB_OUTPUT
           echo "as_json=$reviewers_as_json" >> $GITHUB_OUTPUT
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         if: ${{ steps.check_automatic.outputs.autoapprove != 'true' }}
         with:
           github-token: ${{secrets.BOT_TOKEN}}
