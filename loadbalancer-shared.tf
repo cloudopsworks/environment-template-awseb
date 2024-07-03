@@ -16,7 +16,7 @@ data "aws_lb" "shared_lb" {
 module "app_dns_shared" {
   for_each = {
     for k, v in local.configurations : k => v
-    if try(v.beanstalk.load_balancer.shared.enabled, false)
+    if try(v.beanstalk.load_balancer.shared.enabled, false) && try(v.beanstalk.load_balancer.shared.dns.enabled, false)
   }
 
   source          = "cloudopsworks/beanstalk-dns/aws"
