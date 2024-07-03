@@ -76,7 +76,7 @@ module "version" {
   force_source_compressed = can(each.value.release.source.force_compressed) ? each.value.release.source.force_compressed : false
   source_compressed_type  = can(each.value.release.source.compressed_type) ? each.value.release.source.compressed_type : "zip"
 
-  application_versions_bucket = local.application_versions_bucket
+  application_versions_bucket = module.versions_bucket.s3_bucket_id
 
   beanstalk_application = each.value.beanstalk.application
   config_source_folder  = format("%s/%s", "values", each.value.release.name)
@@ -125,7 +125,7 @@ module "app" {
   load_balancer_shared_name        = try(each.value.beanstalk.load_balancer.shared.name, "")
   load_balancer_shared_weight      = try(each.value.beanstalk.load_balancer.shared.weight, 100)
   load_balancer_public             = each.value.beanstalk.load_balancer.public
-  load_balancer_log_bucket         = local.load_balancer_log_bucket
+  load_balancer_log_bucket         = module.logs_bucket.s3_bucket_id
   load_balancer_log_prefix         = each.value.release.name
   load_balancer_ssl_certificate_id = each.value.beanstalk.load_balancer.ssl_certificate_id
   load_balancer_ssl_policy         = can(each.value.beanstalk.load_balancer.ssl_policy) ? each.value.beanstalk.load_balancer.ssl_policy : null
