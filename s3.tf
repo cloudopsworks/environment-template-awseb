@@ -10,9 +10,9 @@ locals {
 
 module "versions_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.15.1"
+  version = "4.1.2"
 
-  bucket                                = local.application_versions_bucket
+  bucket_prefix                         = local.application_versions_bucket
   acl                                   = "private"
   block_public_acls                     = true
   block_public_policy                   = true
@@ -71,9 +71,9 @@ module "versions_bucket" {
 
 module "logs_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.15.1"
+  version = "4.1.2"
 
-  bucket                                = local.load_balancer_log_bucket
+  bucket_prefix                         = local.load_balancer_log_bucket
   acl                                   = "log-delivery-write"
   block_public_acls                     = true
   block_public_policy                   = true
