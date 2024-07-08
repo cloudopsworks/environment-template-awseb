@@ -9,7 +9,7 @@ locals {
 }
 
 resource "random_string" "random" {
-  count = var.random_bucket_suffix ? 1 : 0
+  count   = var.random_bucket_suffix ? 1 : 0
   length  = 8
   special = false
   lower   = true
