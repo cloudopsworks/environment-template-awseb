@@ -44,12 +44,13 @@ module "dns" {
   }
 
   source          = "cloudopsworks/beanstalk-dns/aws"
-  version         = "1.0.4"
+  version         = "1.0.5"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
   release_name             = each.value.release.name
   namespace                = var.namespace
+  private_domain           = try(each.value.dns.private_zone, false)
   domain_name              = each.value.dns.domain_name
   domain_name_alias_prefix = each.value.dns.alias_prefix
   domain_alias             = true
