@@ -30,6 +30,8 @@ module.tf:
 		cp template-module.yaml_template $(TARGET)-module.yaml ; \
 		mkdir -p values/${TARGET}/ ; \
 		touch values/$(TARGET)/.placeholder ; \
+		mkdir -p packages/${TARGET}/.ebextensions ; \
+		cp -p modules/extensions/ssh-limit.config packages/${TARGET}/.ebextensions/ ; \
 	else echo "Module $(TARGET)-module.yaml found... all OK" ; \
 	fi
 # ifeq "" "$(T)"
