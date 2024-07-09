@@ -94,7 +94,7 @@ module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.13"
+  version         = "1.0.14"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -134,7 +134,7 @@ module "app" {
 
   port_mappings  = each.value.beanstalk.port_mappings
   rule_mappings  = try(each.value.beanstalk.rule_mappings, [])
-  extra_tags     = each.value.beanstalk.extra_tags
+  extra_tags     = merge(try(each.value.beanstalk.extra_tags, {}), module.tags.locals.common_tags)
   extra_settings = each.value.beanstalk.extra_settings
 }
 
