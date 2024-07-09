@@ -60,6 +60,8 @@ beanstalk:
   load_balancer:
     # Shared Load Balancer configuration subset
     #shared:
+    #  dns:
+    #    enabled: false
     #  enabled: false
     #  name: SHARED_LB_NAME
     #  weight: 100
