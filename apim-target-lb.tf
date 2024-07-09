@@ -123,7 +123,7 @@ resource "aws_lb_listener" "apigw_rest_lb_listener_link" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.apigw_rest_lb_tg_link[each.key].arn
   }
-  tags = local.tags[each.key]
+  tags = merge(local.tags[each.key], module.tags.locals.common_tags)
 
   lifecycle {
     replace_triggered_by = [aws_lb_target_group.apigw_rest_lb_tg_link[each.key]]
