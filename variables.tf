@@ -3,6 +3,16 @@
 #            On GitHub: https://github.com/cloudopsworks
 #            Distributed Under Apache v2.0 License
 #
+variable "organization_name" {
+  type        = string
+  description = "Organization Name"
+
+}
+variable "environment_name" {
+  type        = string
+  description = "Environment Name"
+
+}
 variable "namespace" {
   type        = string
   description = "Namespace identifying this environment setup"
@@ -11,6 +21,12 @@ variable "namespace" {
 variable "default_bucket_prefix" {
   type        = string
   description = "Default Bucket Prefix"
+}
+
+variable "random_bucket_suffix" {
+  type        = bool
+  default     = false
+  description = "Random Suffix"
 }
 
 variable "repository_owner" {

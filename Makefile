@@ -30,6 +30,8 @@ module.tf:
 		cp template-module.yaml_template $(TARGET)-module.yaml ; \
 		mkdir -p values/${TARGET}/ ; \
 		touch values/$(TARGET)/.placeholder ; \
+		mkdir -p packages/${TARGET}/.ebextensions ; \
+		cp -p modules/extensions/ssh-limit.config packages/${TARGET}/.ebextensions/ ; \
 	else echo "Module $(TARGET)-module.yaml found... all OK" ; \
 	fi
 # ifeq "" "$(T)"
@@ -119,3 +121,6 @@ env/update:
 	@for release_name in $$(ls -1 values/) ; do \
 		find values/$${release_name} -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum > .values_hash_$${release_name} ; \
 	done
+
+lint:
+	$(SELF) terraform/install terraform/get-modules terraform/get-plugins terraform/lint terraform/validate

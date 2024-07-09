@@ -15,6 +15,7 @@ release:
 #  extra_run_command:
 dns:
   enabled: true
+  private_zone: false
   domain_name: DOMAIN_NAME
   alias_prefix: ALIAS_PREFIX
 alarms:

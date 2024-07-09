@@ -4,15 +4,24 @@
 #            Distributed Under Apache v2.0 License
 #
 locals {
-  load_balancer_log_bucket    = "${var.default_bucket_prefix}-lb-logs"
-  application_versions_bucket = "${var.default_bucket_prefix}-app-versions"
+  load_balancer_log_bucket    = var.random_bucket_suffix ? "${var.default_bucket_prefix}-lb-logs-${random_string.random[0].result}" : "${var.default_bucket_prefix}-lb-logs"
+  application_versions_bucket = var.random_bucket_suffix ? "${var.default_bucket_prefix}-app-versions-${random_string.random[0].result}" : "${var.default_bucket_prefix}-app-versions"
+}
+
+resource "random_string" "random" {
+  count   = var.random_bucket_suffix ? 1 : 0
+  length  = 8
+  special = false
+  lower   = true
+  upper   = false
+  numeric = true
 }
 
 module "versions_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "4.1.2"
+  version = "3.15.2"
 
-  bucket_prefix                         = local.application_versions_bucket
+  bucket                                = local.application_versions_bucket
   acl                                   = "private"
   block_public_acls                     = true
   block_public_policy                   = true
@@ -67,13 +76,14 @@ module "versions_bucket" {
       }
     }
   ]
+  tags = module.tags.locals.common_tags
 }
 
 module "logs_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "4.1.2"
+  version = "3.15.2"
 
-  bucket_prefix                         = local.load_balancer_log_bucket
+  bucket                                = local.load_balancer_log_bucket
   acl                                   = "log-delivery-write"
   block_public_acls                     = true
   block_public_policy                   = true
@@ -111,4 +121,5 @@ module "logs_bucket" {
       }
     }
   ]
+  tags = module.tags.locals.common_tags
 }

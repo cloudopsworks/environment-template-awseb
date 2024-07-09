@@ -44,12 +44,13 @@ module "dns" {
   }
 
   source          = "cloudopsworks/beanstalk-dns/aws"
-  version         = "1.0.4"
+  version         = "1.0.5"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
   release_name             = each.value.release.name
   namespace                = var.namespace
+  private_domain           = try(each.value.dns.private_zone, false)
   domain_name              = each.value.dns.domain_name
   domain_name_alias_prefix = each.value.dns.alias_prefix
   domain_alias             = true
@@ -76,7 +77,7 @@ module "version" {
   force_source_compressed = can(each.value.release.source.force_compressed) ? each.value.release.source.force_compressed : false
   source_compressed_type  = can(each.value.release.source.compressed_type) ? each.value.release.source.compressed_type : "zip"
 
-  application_versions_bucket = local.application_versions_bucket
+  application_versions_bucket = module.versions_bucket.s3_bucket_id
 
   beanstalk_application = each.value.beanstalk.application
   config_source_folder  = format("%s/%s", "values", each.value.release.name)
@@ -93,7 +94,7 @@ module "app" {
   for_each = local.configurations
 
   source          = "cloudopsworks/beanstalk-deploy/aws"
-  version         = "1.0.12"
+  version         = "1.0.14"
   region          = var.region
   sts_assume_role = var.sts_assume_role
 
@@ -125,7 +126,7 @@ module "app" {
   load_balancer_shared_name        = try(each.value.beanstalk.load_balancer.shared.name, "")
   load_balancer_shared_weight      = try(each.value.beanstalk.load_balancer.shared.weight, 100)
   load_balancer_public             = each.value.beanstalk.load_balancer.public
-  load_balancer_log_bucket         = local.load_balancer_log_bucket
+  load_balancer_log_bucket         = module.logs_bucket.s3_bucket_id
   load_balancer_log_prefix         = each.value.release.name
   load_balancer_ssl_certificate_id = each.value.beanstalk.load_balancer.ssl_certificate_id
   load_balancer_ssl_policy         = can(each.value.beanstalk.load_balancer.ssl_policy) ? each.value.beanstalk.load_balancer.ssl_policy : null
@@ -133,7 +134,7 @@ module "app" {
 
   port_mappings  = each.value.beanstalk.port_mappings
   rule_mappings  = try(each.value.beanstalk.rule_mappings, [])
-  extra_tags     = each.value.beanstalk.extra_tags
+  extra_tags     = merge(try(each.value.beanstalk.extra_tags, {}), module.tags.locals.common_tags)
   extra_settings = each.value.beanstalk.extra_settings
 }
 

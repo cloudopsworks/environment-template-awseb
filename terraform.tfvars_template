@@ -5,8 +5,11 @@
 #
 region           = "AWS REGION"
 #use_sts          = true | false
+organization_name        = "ORG_NAME"
+environment_name         = "ENV_NAME|Beanstalk"
 sts_assume_role          = "arn:aws:iam::ACCOUNT_ID:role/GITHubActionsRunRole"
 default_bucket_prefix    = "AWS S3 BUCKET PREFIX NAME THAT WILL BE USED FOR BUCKETS IN THIS ENV (LOGS+VERSION)"
+random_bucket_suffix     = true|false
 namespace                = "IDENTIFIES THE NAMESPACE FOR THE ENVIRONMENT TEAM" 
 repository_owner         = "GITHUB TEAM OWNER"
 logs_retention_years     = 3
